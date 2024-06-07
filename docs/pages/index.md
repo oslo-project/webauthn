@@ -6,8 +6,6 @@ title: "@oslojs/webauthn documentation"
 
 **This package is highly experimental!**
 
-**Documentation: https://webauthn.oslojs.dev**
-
 A JavaScript library for working with the Web Authentication API on the server by [Oslo](https://oslojs.dev).
 
 - Runtime-agnostic
