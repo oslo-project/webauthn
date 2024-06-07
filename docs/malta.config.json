@@ -1,0 +1,22 @@
+{
+	"name": "@oslojs/webauthn",
+	"description": "Parse and verify Web Authentication data.",
+	"domain": "https://webauthn.oslojs.dev",
+	"twitter": "@pilcrowonpaper",
+	"asset_hashing": true,
+	"sidebar": [
+		{
+			"title": "API reference",
+			"pages": [["@oslojs/webauthn", "/reference/main"]]
+		},
+		{
+			"title": "Links",
+			"pages": [
+				["GitHub", "https://github.com/oslo-project/webauthn"],
+				["Oslo", "https://oslojs.dev"],
+				["Twitter", "https://twitter.com/pilcrowonpaper"],
+				["Donate", "https://github.com/sponsors/pilcrowOnPaper"]
+			]
+		}
+	]
+}
