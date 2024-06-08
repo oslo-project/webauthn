@@ -9,7 +9,7 @@ import {
 	encodeObjectIdentifier
 } from "@oslojs/asn1";
 import { Hash, EllipticCurve } from "./crypto.js";
-import { variableUintToBytesBigEndian } from "./integer.js";
+import { bigIntBytes } from "@oslojs/binary";
 
 import type { ECDSAPublicKey, RSAPublicKey } from "./crypto.js";
 
@@ -46,8 +46,8 @@ export async function verifyECDSASignature(
 
 	const uncompressedPublicKey = new Uint8Array(65);
 	uncompressedPublicKey[0] = 0x04;
-	uncompressedPublicKey.set(variableUintToBytesBigEndian(publicKey.x), 1);
-	uncompressedPublicKey.set(variableUintToBytesBigEndian(publicKey.y), 33);
+	uncompressedPublicKey.set(bigIntBytes(publicKey.x), 1);
+	uncompressedPublicKey.set(bigIntBytes(publicKey.y), 33);
 	const webCryptoPublicKey = await crypto.subtle.importKey(
 		"raw",
 		uncompressedPublicKey,
@@ -79,8 +79,8 @@ export async function verifyECDSASignature(
 	if (r < 1n || s < 1n) {
 		return false;
 	}
-	const rBytes = variableUintToBytesBigEndian(r);
-	const sBytes = variableUintToBytesBigEndian(s);
+	const rBytes = bigIntBytes(r);
+	const sBytes = bigIntBytes(s);
 	const signature = new Uint8Array(Math.max(rBytes.byteLength, sBytes.byteLength) * 2);
 	signature.set(rBytes, signature.byteLength / 2 - rBytes.byteLength);
 	signature.set(sBytes, signature.byteLength - sBytes.byteLength);

@@ -1,5 +1,7 @@
 # @oslojs/webauthn
 
+## 0.2.1
+
 ## 0.2.0
 
 - [Breaking] `PackedAttestationStatement.certificates` can be `null`.

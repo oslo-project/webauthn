@@ -1,6 +1,6 @@
 import { decodeCBORIntoNative } from "@oslojs/cbor";
 import { EllipticCurve } from "./crypto.js";
-import { toVariableUint } from "./integer.js";
+import {bigIntFromBytes} from "@oslojs/binary"
 
 import type { ECDSAPublicKey, RSAPublicKey } from "./crypto.js";
 
@@ -63,8 +63,8 @@ export class COSEPublicKey {
 		}
 		const publicKey: ECDSAPublicKey = {
 			curve,
-			x: toVariableUint(this.decoded["-2"]),
-			y: toVariableUint(this.decoded["-3"])
+			x: bigIntFromBytes(this.decoded["-2"]),
+			y: bigIntFromBytes(this.decoded["-3"])
 		};
 		return publicKey;
 	}
@@ -83,8 +83,8 @@ export class COSEPublicKey {
 			throw new Error();
 		}
 		const publicKey: RSAPublicKey = {
-			n: toVariableUint(this.decoded["-1"]),
-			e: toVariableUint(this.decoded["-2"])
+			n: bigIntFromBytes(this.decoded["-1"]),
+			e: bigIntFromBytes(this.decoded["-2"])
 		};
 		return publicKey;
 	}

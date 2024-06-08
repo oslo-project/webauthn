@@ -5,7 +5,7 @@ import {
 	verifyRSASSAPKCS1v1_5Signature,
 	verifyRSASSAPSSSignature
 } from "./signature.js";
-import { EllipticCurve, Hash, type ECDSAPublicKey, type RSAPublicKey } from "./crypto.js";
+import { EllipticCurve, Hash } from "./crypto.js";
 import {
 	ASN1BitString,
 	ASN1Integer,
@@ -13,7 +13,9 @@ import {
 	decodeASN1NoLeftoverBytes,
 	encodeASN1
 } from "@oslojs/asn1";
-import { toVariableUint } from "./integer.js";
+import { bigIntFromBytes } from "@oslojs/binary";
+
+import type { ECDSAPublicKey, RSAPublicKey } from "./crypto.js";
 
 test("verifyECDSASignature()", async () => {
 	const authenticatorData = new Uint8Array([0x01]);
@@ -40,14 +42,14 @@ test("verifyECDSASignature()", async () => {
 	const encodedPublicKey = new Uint8Array(
 		await crypto.subtle.exportKey("raw", webCryptoKeys.publicKey)
 	);
-	const r = toVariableUint(signature.slice(0, signature.byteLength / 2));
-	const s = toVariableUint(signature.slice(signature.byteLength / 2));
+	const r = bigIntFromBytes(signature.slice(0, signature.byteLength / 2));
+	const s = bigIntFromBytes(signature.slice(signature.byteLength / 2));
 	const derSignature = encodeASN1(new ASN1Sequence([new ASN1Integer(r), new ASN1Integer(s)]));
 
 	const publicKey: ECDSAPublicKey = {
 		curve: EllipticCurve.P256,
-		x: toVariableUint(encodedPublicKey.slice(1, 33)),
-		y: toVariableUint(encodedPublicKey.slice(33))
+		x: bigIntFromBytes(encodedPublicKey.slice(1, 33)),
+		y: bigIntFromBytes(encodedPublicKey.slice(33))
 	};
 	await expect(
 		verifyECDSASignature(Hash.SHA256, publicKey, derSignature, authenticatorData, clientDataJSON)
