@@ -28,9 +28,7 @@ export function parseClientDataJSON(encoded: Uint8Array): ClientData {
 	}
 	let challenge: Uint8Array;
 	try {
-		challenge = base64url.decode(parsed.challenge, {
-			strict: false
-		});
+		challenge = base64url.decodeIgnorePadding(parsed.challenge);
 	} catch {
 		throw new ClientDataParseError("Missing or invalid property 'challenge'");
 	}
@@ -59,7 +57,7 @@ export function parseClientDataJSON(encoded: Uint8Array): ClientData {
 
 		let tokenBindingId: Uint8Array;
 		try {
-			tokenBindingId = base64url.decode(parsed.tokenBinding.id);
+			tokenBindingId = base64url.decodeIgnorePadding(parsed.tokenBinding.id);
 		} catch {
 			throw new ClientDataParseError("Missing or invalid property 'tokenBinding.id'");
 		}

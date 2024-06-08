@@ -1,7 +1,7 @@
 {
 	"name": "@oslojs/webauthn",
 	"type": "module",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Parse and verify Web Authentication data",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -41,6 +41,6 @@
 		"@oslojs/binary": "0.2.0",
 		"@oslojs/cbor": "^0.1.0",
 		"@oslojs/crypto": "0.2.0",
-		"@oslojs/encoding": "0.2.0"
+		"@oslojs/encoding": "0.3.0"
 	}
 }
