@@ -23,8 +23,8 @@ title: "@oslojs/webauthn"
 
 ## Enums
 
-- [`AttestationStatementFormat()`](/reference/main/AttestationStatementFormat)
-- [`ClientDataType()`](/reference/main/ClientDataType)
+- [`AttestationStatementFormat`](/reference/main/AttestationStatementFormat)
+- [`ClientDataType`](/reference/main/ClientDataType)
 - [`COSEAlgorithm`](/reference/main/COSEAlgorithm)
 - [`EllipticCurve`](/reference/main/EllipticCurve)
 - [`Hash`](/reference/main/Hash)
