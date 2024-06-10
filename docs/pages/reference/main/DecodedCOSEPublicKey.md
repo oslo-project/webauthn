@@ -4,7 +4,12 @@ title: "DecodedCOSEPublicKey"
 
 # DecodedCOSEPublicKey
 
-The decoded COSE public key as an object, where CBOR integers are `Number` and bit strings are `Uint8Array`.
+The decoded COSE public key, where:
+
+- COSE integers are `Number`
+- COSE bit strings are `Uint8Array`
+- COSE arrays are JS arrays
+- COSE maps are JS objects with stringified keys
 
 ## Definition
 

@@ -15,7 +15,7 @@ function constructor(decoded: $$DecodedCOSEPublicKey): this;
 
 ### Parameters
 
-- `decoded`
+- `decoded`: See [`DecodedCOSEPublicKey`](/reference/main/DecodedCOSEPublicKey) for decoding rules.
 
 ## Methods
 
