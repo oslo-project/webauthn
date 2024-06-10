@@ -45,4 +45,4 @@ title: "@oslojs/webauthn"
 - [`RSAPublicKey`](/reference/main/RSAPublicKey)
 - [`TokenBinding`](/reference/main/TokenBinding)
 - [`TPMAttestationStatement`](/reference/main/TPMAttestationStatement)
-- [`WebAuthnCredential()`](/reference/main/WebAuthnCredential)
+- [`WebAuthnCredential`](/reference/main/WebAuthnCredential)

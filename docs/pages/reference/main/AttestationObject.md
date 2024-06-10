@@ -12,8 +12,8 @@ The parsed attestation object.
 //$ AttestationStatement=/reference/main/AttestationStatement
 //$ AuthenticatorData=/reference/main/AuthenticatorData
 interface AttestationObject {
-	attestationStatement: AttestationStatement;
-	authenticatorData: AuthenticatorData;
+	attestationStatement: $$AttestationStatement;
+	authenticatorData: $$AuthenticatorData;
 }
 ```
 
