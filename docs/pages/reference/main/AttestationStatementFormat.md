@@ -13,7 +13,7 @@ enum AttestationStatementFormat {
 	AndroidKey,
 	AndroidSafetyNet,
 	FIDOU2F,
-	Apple,
+	AppleAnonymous,
 	None
 }
 ```

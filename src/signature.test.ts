@@ -6,13 +6,7 @@ import {
 	verifyRSASSAPSSSignature
 } from "./signature.js";
 import { EllipticCurve, Hash } from "./crypto.js";
-import {
-	ASN1BitString,
-	ASN1Integer,
-	ASN1Sequence,
-	decodeASN1NoLeftoverBytes,
-	encodeASN1
-} from "@oslojs/asn1";
+import { ASN1BitString, ASN1Integer, ASN1Sequence, decodeASN1NoLeftoverBytes, encodeASN1 } from "@oslojs/asn1";
 import { bigIntFromBytes } from "@oslojs/binary";
 
 import type { ECDSAPublicKey, RSAPublicKey } from "./crypto.js";
@@ -39,9 +33,7 @@ test("verifyECDSASignature()", async () => {
 			message
 		)
 	);
-	const encodedPublicKey = new Uint8Array(
-		await crypto.subtle.exportKey("raw", webCryptoKeys.publicKey)
-	);
+	const encodedPublicKey = new Uint8Array(await crypto.subtle.exportKey("raw", webCryptoKeys.publicKey));
 	const r = bigIntFromBytes(signature.slice(0, signature.byteLength / 2));
 	const s = bigIntFromBytes(signature.slice(signature.byteLength / 2));
 	const derSignature = encodeASN1(new ASN1Sequence([new ASN1Integer(r), new ASN1Integer(s)]));
@@ -70,9 +62,7 @@ test("verifyRSASSAPKCS1v1_5Signature()", async () => {
 		["sign", "verify"]
 	);
 	const message = createSignatureMessage(authenticatorData, clientDataJSON);
-	const signature = new Uint8Array(
-		await crypto.subtle.sign("RSASSA-PKCS1-v1_5", webCryptoKeys.privateKey, message)
-	);
+	const signature = new Uint8Array(await crypto.subtle.sign("RSASSA-PKCS1-v1_5", webCryptoKeys.privateKey, message));
 	const spki = new Uint8Array(await crypto.subtle.exportKey("spki", webCryptoKeys.publicKey));
 	const decodedSPKI = decodeASN1NoLeftoverBytes(spki, 10);
 	if (!(decodedSPKI instanceof ASN1Sequence) || decodedSPKI.items.length !== 2) {
@@ -96,13 +86,7 @@ test("verifyRSASSAPKCS1v1_5Signature()", async () => {
 		e: eASN1.value
 	};
 	await expect(
-		verifyRSASSAPKCS1v1_5Signature(
-			Hash.SHA256,
-			publicKey,
-			signature,
-			authenticatorData,
-			clientDataJSON
-		)
+		verifyRSASSAPKCS1v1_5Signature(Hash.SHA256, publicKey, signature, authenticatorData, clientDataJSON)
 	).to.resolves.toBe(true);
 });
 

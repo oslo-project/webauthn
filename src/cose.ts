@@ -1,6 +1,6 @@
 import { decodeCBORIntoNative } from "@oslojs/cbor";
 import { EllipticCurve } from "./crypto.js";
-import {bigIntFromBytes} from "@oslojs/binary"
+import { bigIntFromBytes } from "@oslojs/binary";
 
 import type { ECDSAPublicKey, RSAPublicKey } from "./crypto.js";
 

@@ -1,5 +1,9 @@
 # @oslojs/webauthn
 
+## 0.3.0
+
+- [Breaking] Rename `AttestationFormat.Apple` to `AttestationFormat.AppleAnonymous`
+
 ## 0.2.1
 
 ## 0.2.0

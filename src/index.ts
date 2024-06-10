@@ -1,8 +1,4 @@
-export {
-	AttestationStatementFormat,
-	parseAttestationObject,
-	AttestationObjectParseError
-} from "./attestation.js";
+export { AttestationStatementFormat, parseAttestationObject, AttestationObjectParseError } from "./attestation.js";
 export {
 	AuthenticatorDataParseError,
 	ClientDataType,

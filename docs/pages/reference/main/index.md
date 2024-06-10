@@ -7,6 +7,7 @@ title: "@oslojs/webauthn"
 ## Classes
 
 - [`AttestationObjectParseError`](/reference/main/AttestationObjectParseError)
+- [`AttestationStatement`](/reference/main/AttestationStatement)
 - [`AuthenticatorDataParseError`](/reference/main/AuthenticatorDataParseError)
 - [`ClientDataParseError`](/reference/main/ClientDataParseError)
 - [`COSEPublicKey`](/reference/main/COSEPublicKey)

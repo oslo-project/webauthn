@@ -116,9 +116,7 @@ export async function verifyRSASSAPKCS1v1_5Signature(
 		throw new TypeError("Unsupported hash");
 	}
 
-	const encodedPublicKey = encodeASN1(
-		new ASN1Sequence([new ASN1Integer(publicKey.n), new ASN1Integer(publicKey.e)])
-	);
+	const encodedPublicKey = encodeASN1(new ASN1Sequence([new ASN1Integer(publicKey.n), new ASN1Integer(publicKey.e)]));
 	const spki = encodeASN1(
 		new ASN1Sequence([
 			new ASN1Sequence([new ASN1ObjectIdentifier(encodeObjectIdentifier("1.2.840.113549.1.1.1"))]),
@@ -165,9 +163,7 @@ export async function verifyRSASSAPSSSignature(
 		throw new TypeError("Unsupported hash");
 	}
 
-	const encodedPublicKey = encodeASN1(
-		new ASN1Sequence([new ASN1Integer(publicKey.n), new ASN1Integer(publicKey.e)])
-	);
+	const encodedPublicKey = encodeASN1(new ASN1Sequence([new ASN1Integer(publicKey.n), new ASN1Integer(publicKey.e)]));
 	const spki = encodeASN1(
 		new ASN1Sequence([
 			new ASN1Sequence([new ASN1ObjectIdentifier(encodeObjectIdentifier("1.2.840.113549.1.1.1"))]),
@@ -197,10 +193,7 @@ export async function verifyRSASSAPSSSignature(
 	return result;
 }
 
-export function createSignatureMessage(
-	authenticatorData: Uint8Array,
-	clientDataJSON: Uint8Array
-): Uint8Array {
+export function createSignatureMessage(authenticatorData: Uint8Array, clientDataJSON: Uint8Array): Uint8Array {
 	const hash = sha256(clientDataJSON);
 	const message = new Uint8Array(authenticatorData.byteLength + hash.byteLength);
 	message.set(authenticatorData);

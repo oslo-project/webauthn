@@ -38,11 +38,9 @@ export function parseAttestationObject(encoded: Uint8Array): AttestationObject {
 	} else if (decoded.fmt === "none") {
 		attestationFormat = AttestationStatementFormat.None;
 	} else if (decoded.fmt === "apple") {
-		attestationFormat = AttestationStatementFormat.Apple;
+		attestationFormat = AttestationStatementFormat.AppleAnonymous;
 	} else {
-		throw new AttestationObjectParseError(
-			`Unsupported attestation statement format '${decoded.fmt}'`
-		);
+		throw new AttestationObjectParseError(`Unsupported attestation statement format '${decoded.fmt}'`);
 	}
 	const attestationObject: AttestationObject = {
 		authenticatorData: parseAuthenticatorData(decoded.authData),
@@ -233,7 +231,7 @@ export class AttestationStatement {
 	}
 
 	public appleAnonymous(): AppleAnonymousAttestationStatement {
-		if (this.format !== AttestationStatementFormat.Apple) {
+		if (this.format !== AttestationStatementFormat.AppleAnonymous) {
 			throw new AttestationStatementParseError("Invalid format");
 		}
 		if (!("x5c" in this.decoded) || !Array.isArray(this.decoded.x5c)) {
@@ -301,6 +299,6 @@ export enum AttestationStatementFormat {
 	AndroidKey,
 	AndroidSafetyNet,
 	FIDOU2F,
-	Apple,
+	AppleAnonymous,
 	None
 }
