@@ -7,14 +7,8 @@ export {
 	parseClientDataJSON,
 	TokenBindingStatus
 } from "./auth.js";
-export { COSEAlgorithm, COSEPublicKey } from "./cose.js";
-export { EllipticCurve, Hash } from "./crypto.js";
-export {
-	createSignatureMessage,
-	verifyECDSASignature,
-	verifyRSASSAPKCS1v1_5Signature,
-	verifyRSASSAPSSSignature
-} from "./signature.js";
+export { COSEAlgorithm, COSEPublicKey, COSEEllipticCurve, COSEKeyType, COSEParseError } from "./cose.js";
+export { createAssertionSignatureMessage } from "./signature.js";
 
 export type {
 	AttestationObject,
@@ -26,5 +20,4 @@ export type {
 	TPMAttestationStatement
 } from "./attestation.js";
 export type { AuthenticatorData, WebAuthnCredential, ClientData, TokenBinding } from "./auth.js";
-export type { DecodedCOSEPublicKey } from "./cose.js";
-export type { ECDSAPublicKey, RSAPublicKey } from "./crypto.js";
+export type { COSEEC2PublicKey, COSEOKPPublicKey, COSERSAPublicKey } from "./cose.js";

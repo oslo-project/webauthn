@@ -1,6 +1,6 @@
 import { bigEndian } from "@oslojs/binary";
 import { base64url } from "@oslojs/encoding";
-import { COSEPublicKey, parseCOSEPublicKey } from "./cose.js";
+import { COSEPublicKey, decodeCOSEPublicKey } from "./cose.js";
 
 export function parseClientDataJSON(encoded: Uint8Array): ClientData {
 	let parsed: unknown;
@@ -136,7 +136,7 @@ export function parseAuthenticatorData(encoded: Uint8Array): AuthenticatorData {
 		const credentialId = encoded.slice(55, 55 + credentialIdLength);
 		let credentialPublicKey: COSEPublicKey;
 		try {
-			[credentialPublicKey] = parseCOSEPublicKey(encoded.slice(55 + credentialIdLength));
+			[credentialPublicKey] = decodeCOSEPublicKey(encoded.slice(55 + credentialIdLength));
 		} catch {
 			throw new AuthenticatorDataParseError("Failed to parse public key");
 		}

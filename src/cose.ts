@@ -1,98 +1,184 @@
 import { decodeCBORIntoNative } from "@oslojs/cbor";
-import { EllipticCurve } from "./crypto.js";
 import { bigIntFromBytes } from "@oslojs/binary";
 
-import type { ECDSAPublicKey, RSAPublicKey } from "./crypto.js";
-
-export function parseCOSEPublicKey(data: Uint8Array): [publicKey: COSEPublicKey, size: number] {
-	const [decodedRaw, size] = decodeCBORIntoNative(data, 4);
-	if (typeof decodedRaw !== "object" || decodedRaw === null) {
-		throw new Error();
+export function decodeCOSEPublicKey(data: Uint8Array): [publicKey: COSEPublicKey, size: number] {
+	let decoded: unknown;
+	let size: number;
+	try {
+		[decoded, size] = decodeCBORIntoNative(data, 4);
+	} catch {
+		throw new COSEParseError("Failed to decode CBOR");
 	}
-	if (!(1 in decodedRaw) || typeof decodedRaw[1] !== "number") {
-		throw new Error();
+	if (typeof decoded !== "object" || decoded === null) {
+		throw new COSEParseError("Failed to parse object");
 	}
-	if (!(3 in decodedRaw) || typeof decodedRaw[3] !== "number") {
-		throw new Error();
-	}
-	const decoded: DecodedCOSEPublicKey = {
-		1: decodedRaw[1],
-		3: decodedRaw[3]
-	};
 	return [new COSEPublicKey(decoded), size];
 }
 
 export class COSEPublicKey {
-	public decoded: DecodedCOSEPublicKey;
+	public decoded: object;
 
-	constructor(decoded: DecodedCOSEPublicKey) {
+	constructor(decoded: object) {
 		this.decoded = decoded;
 	}
 
+	public type(): COSEKeyType {
+		if (!(1 in this.decoded) || typeof this.decoded[1] !== "number") {
+			throw new COSEParseError("Invalid or missing parameter 'kty'");
+		}
+		const typeId = this.decoded[1];
+		if (typeId in COSE_KEY_ID_MAP) {
+			return COSE_KEY_ID_MAP[typeId];
+		}
+		throw new COSEParseError(`Unknown 'kty' value '${typeId}'`);
+	}
+
+	public isAlgorithmDefined(): boolean {
+		if (!(3 in this.decoded)) {
+			return false;
+		}
+		if (typeof this.decoded[3] !== "number") {
+			throw new COSEParseError("Invalid parameter 'alg'");
+		}
+		return true;
+	}
+
 	public algorithm(): COSEAlgorithm {
-		if (this.decoded[3] in COSE_ALGORITHM_ID_MAP) {
-			return COSE_ALGORITHM_ID_MAP[this.decoded[3]];
+		if (!(3 in this.decoded) || typeof this.decoded[3] !== "number") {
+			throw new COSEParseError("Invalid or missing parameter 'alg'");
 		}
-		throw new Error();
+		const algorithmId = this.decoded[3];
+		if (algorithmId in COSE_ALGORITHM_ID_MAP) {
+			return COSE_ALGORITHM_ID_MAP[algorithmId];
+		}
+		throw new COSEParseError(`Unknown 'alg' value '${algorithmId}'`);
 	}
 
-	public ecdsa(): ECDSAPublicKey {
+	public ec2(): COSEEC2PublicKey {
+		if (this.type() !== COSEKeyType.EC2) {
+			throw new COSEParseError("Expected an elliptic curve public key");
+		}
+
 		if (!("-1" in this.decoded) || typeof this.decoded["-1"] !== "number") {
-			throw new Error();
+			throw new COSEParseError("Invalid or missing parameter 'crv'");
 		}
-		let curve: EllipticCurve;
-		if (this.decoded["-1"] === 1) {
-			curve = EllipticCurve.P256;
-		} else if (this.decoded["-1"] === 2) {
-			curve = EllipticCurve.P384;
-		} else if (this.decoded["-1"] === 3) {
-			curve = EllipticCurve.P521;
-		} else if (this.decoded["-1"] === 8) {
-			curve = EllipticCurve.P521;
-		} else {
-			throw new Error("Unknown elliptic curve");
+		if (!(this.decoded["-1"] in COSE_ELLIPTIC_CURVE_MAP)) {
+			throw new COSEParseError(`Unknown 'crv' value '${this.decoded["-1"]}'`);
 		}
+		const curve = COSE_ELLIPTIC_CURVE_MAP[this.decoded["-1"]];
+
 		if (!("-2" in this.decoded) || !(this.decoded["-2"] instanceof Uint8Array)) {
-			throw new Error();
+			throw new COSEParseError("Invalid or missing parameter 'x'");
 		}
+		const xBytes = this.decoded["-2"];
+		if (xBytes.byteLength !== 32) {
+			throw new COSEParseError("Invalid or missing parameter 'x'");
+		}
+
 		if (!("-3" in this.decoded) || !(this.decoded["-3"] instanceof Uint8Array)) {
-			throw new Error();
+			throw new COSEParseError("Invalid or missing parameter 'y'");
 		}
-		if (this.decoded["-2"].length !== 32 || this.decoded["-3"].length !== 32) {
-			throw new Error();
+		const yBytes = this.decoded["-3"];
+		if (yBytes.byteLength !== 32) {
+			throw new COSEParseError("Invalid or missing parameter 'y'");
 		}
-		const publicKey: ECDSAPublicKey = {
+
+		const publicKey: COSEEC2PublicKey = {
 			curve,
-			x: bigIntFromBytes(this.decoded["-2"]),
-			y: bigIntFromBytes(this.decoded["-3"])
+			x: bigIntFromBytes(xBytes),
+			y: bigIntFromBytes(yBytes)
 		};
 		return publicKey;
 	}
 
-	public rsa(): RSAPublicKey {
+	public rsa(): COSERSAPublicKey {
+		if (this.type() !== COSEKeyType.RSA) {
+			throw new COSEParseError("Expected an RSA public key");
+		}
+
 		if (!("-1" in this.decoded) || !(this.decoded["-1"] instanceof Uint8Array)) {
-			throw new Error();
+			throw new COSEParseError("Invalid or missing parameter 'n'");
 		}
-		if (this.decoded["-1"].length !== 256) {
-			throw new Error();
+		const nBytes = this.decoded["-1"];
+		if (nBytes.byteLength !== 256) {
+			throw new COSEParseError("Invalid or missing parameter 'n'");
 		}
+
 		if (!("-2" in this.decoded) || !(this.decoded["-2"] instanceof Uint8Array)) {
-			throw new Error();
+			throw new COSEParseError("Invalid or missing parameter 'e'");
 		}
-		if (this.decoded["-2"].length !== 3) {
-			throw new Error();
+		const eBytes = this.decoded["-2"];
+		if (eBytes.byteLength !== 3) {
+			throw new COSEParseError("Invalid or missing parameter 'e'");
 		}
-		const publicKey: RSAPublicKey = {
-			n: bigIntFromBytes(this.decoded["-1"]),
-			e: bigIntFromBytes(this.decoded["-2"])
+
+		const publicKey: COSERSAPublicKey = {
+			n: bigIntFromBytes(nBytes),
+			e: bigIntFromBytes(eBytes)
 		};
 		return publicKey;
+	}
+
+	public okp(): COSEOKPPublicKey {
+		if (this.type() !== COSEKeyType.OKP) {
+			throw new COSEParseError("Expected an octet key pair public key");
+		}
+
+		if (!("-1" in this.decoded) || typeof this.decoded["-1"] !== "number") {
+			throw new COSEParseError("Invalid or missing parameter 'curve'");
+		}
+		if (!(this.decoded["-1"] in COSE_ELLIPTIC_CURVE_MAP)) {
+			throw new COSEParseError("Unknown elliptic curve");
+		}
+		const curve = COSE_ELLIPTIC_CURVE_MAP[this.decoded["-1"]];
+
+		if (!("-2" in this.decoded) || !(this.decoded["-2"] instanceof Uint8Array)) {
+			throw new COSEParseError("Invalid or missing parameter 'x'");
+		}
+		const x = this.decoded["-2"];
+
+		if ("-4" in this.decoded) {
+			throw new COSEParseError("Unexpected parameter 'd'");
+		}
+
+		const publicKey: COSEOKPPublicKey = {
+			curve,
+			x
+		};
+		return publicKey;
+	}
+
+	public symmetric(): Uint8Array {
+		if (this.type() !== COSEKeyType.Symmetric) {
+			throw new COSEParseError("Expected an symmetric key");
+		}
+		if (!("-1" in this.decoded) || !(this.decoded["-1"] instanceof Uint8Array)) {
+			throw new COSEParseError("Invalid or missing parameter 'k'");
+		}
+		const k = this.decoded["-1"];
+		return k;
 	}
 }
+export interface COSEEC2PublicKey {
+	curve: COSEEllipticCurve;
+	x: bigint;
+	y: bigint;
+}
 
-export interface DecodedCOSEPublicKey {
-	1: number;
-	3: number;
+export interface COSERSAPublicKey {
+	n: bigint;
+	e: bigint;
+}
+
+export interface COSEOKPPublicKey {
+	curve: COSEEllipticCurve;
+	x: Uint8Array;
+}
+
+export class COSEParseError extends Error {
+	constructor(message: string) {
+		super(`Failed to parse COSE public key: ${message}`);
+	}
 }
 
 export enum COSEAlgorithm {
@@ -167,6 +253,30 @@ export enum COSEAlgorithm {
 	AESCCM_64_128_256
 }
 
+export enum COSEEllipticCurve {
+	P256 = 0,
+	P384,
+	P521,
+	X25519,
+	X448,
+	Ed25519,
+	Ed448,
+	SECP256k1,
+	BrainpoolP256r1,
+	BrainpoolP320r1,
+	BrainpoolP384r1,
+	BrainpoolP512r1
+}
+
+export enum COSEKeyType {
+	OKP = 0,
+	EC2,
+	RSA,
+	Symmetric,
+	HSSLMS,
+	WalnutDSA
+}
+
 export const COSE_ALGORITHM_ID_MAP: Record<number, COSEAlgorithm> = {
 	"-65535": COSEAlgorithm.RS1,
 	"-65534": COSEAlgorithm.A128CTR,
@@ -237,4 +347,28 @@ export const COSE_ALGORITHM_ID_MAP: Record<number, COSEAlgorithm> = {
 	31: COSEAlgorithm.AESCCM_16_128_256,
 	32: COSEAlgorithm.AESCCM_64_128_128,
 	33: COSEAlgorithm.AESCCM_64_128_256
+};
+
+export const COSE_KEY_ID_MAP: Record<number, COSEKeyType> = {
+	1: COSEKeyType.OKP,
+	2: COSEKeyType.EC2,
+	3: COSEKeyType.RSA,
+	4: COSEKeyType.Symmetric,
+	5: COSEKeyType.HSSLMS,
+	6: COSEKeyType.WalnutDSA
+};
+
+export const COSE_ELLIPTIC_CURVE_MAP: Record<number, COSEEllipticCurve> = {
+	1: COSEEllipticCurve.P256,
+	2: COSEEllipticCurve.P384,
+	3: COSEEllipticCurve.P521,
+	4: COSEEllipticCurve.X25519,
+	5: COSEEllipticCurve.X448,
+	6: COSEEllipticCurve.Ed25519,
+	7: COSEEllipticCurve.Ed448,
+	8: COSEEllipticCurve.SECP256k1,
+	256: COSEEllipticCurve.BrainpoolP256r1,
+	257: COSEEllipticCurve.BrainpoolP320r1,
+	258: COSEEllipticCurve.BrainpoolP384r1,
+	259: COSEEllipticCurve.BrainpoolP512r1
 };

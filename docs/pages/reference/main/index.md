@@ -11,24 +11,22 @@ title: "@oslojs/webauthn"
 - [`AuthenticatorDataParseError`](/reference/main/AuthenticatorDataParseError)
 - [`ClientDataParseError`](/reference/main/ClientDataParseError)
 - [`COSEPublicKey`](/reference/main/COSEPublicKey)
+- [`COSEParseError`](/reference/main/COSEParseError)
 
 ## Functions
 
-- [`createSignatureMessage()`](/reference/main/createSignatureMessage)
+- [`createAssertionSignatureMessage()`](/reference/main/createAssertionSignatureMessage)
 - [`parseAttestationObject()`](/reference/main/parseAttestationObject)
 - [`parseAuthenticatorData()`](/reference/main/parseAuthenticatorData)
 - [`parseClientDataJSON()`](/reference/main/parseClientDataJSON)
-- [`verifyECDSASignature()`](/reference/main/parseClientDataJSON)
-- [`verifyRSASSAPKCS1v1_5Signature()`](/reference/main/verifyRSASSAPKCS1v1_5Signature)
-- [`verifyRSASSAPSSSignature()`](/reference/main/verifyRSASSAPSSSignature)
 
 ## Enums
 
 - [`AttestationStatementFormat`](/reference/main/AttestationStatementFormat)
 - [`ClientDataType`](/reference/main/ClientDataType)
 - [`COSEAlgorithm`](/reference/main/COSEAlgorithm)
-- [`EllipticCurve`](/reference/main/EllipticCurve)
-- [`Hash`](/reference/main/Hash)
+- [`COSEEllipticCurve`](/reference/main/COSEEllipticCurve)
+- [`COSEKeyType`](/reference/main/COSEKeyType)
 - [`TokenBindingStatus`](/reference/main/TokenBindingStatus)
 
 ## Interfaces
@@ -38,12 +36,11 @@ title: "@oslojs/webauthn"
 - [`AppleAnonymousAttestationStatement`](/reference/main/AppleAnonymousAttestationStatement)
 - [`AuthenticatorData`](/reference/main/AuthenticatorData)
 - [`ClientData`](/reference/main/ClientData)
-- [`DecodedCOSEPublicKey`](/reference/main/DecodedCOSEPublicKey)
-- [`ECDSAPublicKey`](/reference/main/ECDSAPublicKey)
-- [`EdDSAPublicKey`](/reference/main/EdDSAPublicKey)
+- [`COSEEC2PublicKey`](/reference/main/COSEEC2PublicKey)
+- [`COSEOKPPublicKey`](/reference/main/COSEOKPPublicKey)
+- [`COSERSAPublicKey`](/reference/main/COSERSAPublicKey)
 - [`FIDOU2FAttestationStatement`](/reference/main/FIDOU2FAttestationStatement)
 - [`PackedAttestationStatement`](/reference/main/PackedAttestationStatement)
-- [`RSAPublicKey`](/reference/main/RSAPublicKey)
 - [`TokenBinding`](/reference/main/TokenBinding)
 - [`TPMAttestationStatement`](/reference/main/TPMAttestationStatement)
 - [`WebAuthnCredential`](/reference/main/WebAuthnCredential)

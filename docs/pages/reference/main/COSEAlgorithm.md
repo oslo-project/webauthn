@@ -4,7 +4,7 @@ title: "COSEAlgorithm"
 
 # COSEAlgorithm
 
-See the [IANA COSE algorithm identifier registry](https://www.iana.org/assignments/cose/cose.xhtml).
+The COSE algorithms [registered on IANA](https://www.iana.org/assignments/cose/cose.xhtml#algorithms).
 
 ## Definition
 

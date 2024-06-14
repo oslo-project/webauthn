@@ -12,7 +12,7 @@ A JavaScript library for working with the Web Authentication API on the server b
 - Fully typed
 
 ```ts
-import { parseAttestationObject, COSEAlgorithm } from "@oslojs/webauthn";
+import { parseAttestationObject, COSEKeyType, COSEAlgorithm } from "@oslojs/webauthn";
 import { sha256 } from "@oslojs/crypto";
 import { compareBytes } from "@oslojs/binary";
 
@@ -27,10 +27,13 @@ if (!compareBytes(authenticatorData.relyingPartyIdHash, relyingPartyIdHash)) {
 if (authenticatorData.credential === null) {
 	throw new Error("Expected credential");
 }
-if (authenticatorData.credential.publicKey.algorithm !== COSEAlgorithm.ES256) {
+if (authenticatorData.credential.publicKey.type() !== COSEKeyType.EC2) {
 	throw new Error("Unsupported algorithm");
 }
-const publicKey = authenticatorData.credential.publicKey.algorithm.ecdsa();
+if (authenticatorData.credential.publicKey.algorithm() !== COSEAlgorithm.ES256) {
+	throw new Error("Unsupported algorithm");
+}
+const publicKey = authenticatorData.credential.publicKey.ec2();
 ```
 
 This package currently does not support attestation extensions and also does not provide APIs for verifying attestation statements (e.g FIDO-U2F, TPM).
@@ -39,20 +42,4 @@ This package currently does not support attestation extensions and also does not
 
 ```
 npm i @oslojs/webauthn
-```
-
-## Prerequisites
-
-This package requires the [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API). This is available in most modern runtimes, including Node.js 20+, Deno, Bun, and Cloudflare Workers. The big exception is Node.js 16 and 18. Make sure to polyfill it using `webcrypto`.
-
-```ts
-import { webcrypto } from "node:crypto";
-
-globalThis.crypto = webcrypto;
-```
-
-Alternatively, add the `--experimental-global-webcrypto` flag when executing files.
-
-```
-node --experimental-global-webcrypto index.js
 ```
