@@ -1,4 +1,4 @@
-import { decodeCBORIntoNativeNoLeftoverBytes } from "@oslojs/cbor";
+import { decodeCBORToNativeValueNoLeftoverBytes } from "@oslojs/cbor";
 import { parseAuthenticatorData } from "./auth.js";
 import { COSE_ALGORITHM_ID_MAP } from "./cose.js";
 
@@ -8,7 +8,7 @@ import type { COSEAlgorithm } from "./cose.js";
 export function parseAttestationObject(encoded: Uint8Array): AttestationObject {
 	let decoded: unknown;
 	try {
-		decoded = decodeCBORIntoNativeNoLeftoverBytes(encoded, 4);
+		decoded = decodeCBORToNativeValueNoLeftoverBytes(encoded, 4);
 	} catch {
 		throw new AttestationObjectParseError("Invalid CBOR data");
 	}

@@ -37,9 +37,9 @@
 		"vitest": "^0.34.6"
 	},
 	"dependencies": {
-		"@oslojs/asn1": "^0.1.2",
+		"@oslojs/asn1": "0.2.0",
 		"@oslojs/binary": "0.2.3",
-		"@oslojs/cbor": "^0.1.0",
+		"@oslojs/cbor": "0.2.0",
 		"@oslojs/crypto": "0.2.0",
 		"@oslojs/encoding": "0.3.0"
 	}

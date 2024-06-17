@@ -1,11 +1,11 @@
-import { decodeCBORIntoNative } from "@oslojs/cbor";
+import { decodeCBORToNativeValue } from "@oslojs/cbor";
 import { bigIntFromBytes } from "@oslojs/binary";
 
 export function decodeCOSEPublicKey(data: Uint8Array): [publicKey: COSEPublicKey, size: number] {
 	let decoded: unknown;
 	let size: number;
 	try {
-		[decoded, size] = decodeCBORIntoNative(data, 4);
+		[decoded, size] = decodeCBORToNativeValue(data, 4);
 	} catch {
 		throw new COSEParseError("Failed to decode CBOR");
 	}
