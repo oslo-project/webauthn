@@ -47,7 +47,7 @@ const response = await fetch("/api/register", {
 });
 ```
 
-On the server, parse the attestation object and client data JSON. For the attestation object, verify the attestation statement format, relying party ID hash, and the user present and user verified flags. For the client data JSON, check the challenge and origin. If all checks passes, verify the signature using the public key of the credential.
+On the server, parse the attestation object and client data JSON. For the attestation object, verify the attestation statement format, relying party ID hash, and the user present and user verified flags. For the client data JSON, check the challenge and origin. If all checks passes, verify the signature against `createAssertionSignatureMessage()` using the public key of the credential.
 
 We recommend using [`@oslojs/crypto`](https://crypto.oslojs.dev) for handling ECDSA public keys and signatures. `verifyECDSA()` is not fully constant-time, though it's fine for most cases since it doesn't use any secrets (e.g. private key).
 
