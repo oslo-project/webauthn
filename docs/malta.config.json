@@ -6,6 +6,14 @@
 	"asset_hashing": true,
 	"sidebar": [
 		{
+			"title": "Examples",
+			"pages": [
+				["Registration", "/examples/registration"],
+				["Authentication", "/examples/authentication"],
+				["Attestation", "/examples/attestation"]
+			]
+		},
+		{
 			"title": "API reference",
 			"pages": [["@oslojs/webauthn", "/reference/main"]]
 		},

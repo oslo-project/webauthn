@@ -8,6 +8,7 @@ title: "@oslojs/webauthn"
 
 - [`AttestationObjectParseError`](/reference/main/AttestationObjectParseError)
 - [`AttestationStatement`](/reference/main/AttestationStatement)
+- [`AuthenticatorData`](/reference/main/AuthenticatorData)
 - [`AuthenticatorDataParseError`](/reference/main/AuthenticatorDataParseError)
 - [`ClientDataParseError`](/reference/main/ClientDataParseError)
 - [`COSEPublicKey`](/reference/main/COSEPublicKey)
@@ -34,7 +35,7 @@ title: "@oslojs/webauthn"
 - [`AndroidKeyAttestationStatement`](/reference/main/AndroidKeyAttestationStatement)
 - [`AndroidSafetyNetAttestationStatement`](/reference/main/AndroidSafetyNetAttestationStatement)
 - [`AppleAnonymousAttestationStatement`](/reference/main/AppleAnonymousAttestationStatement)
-- [`AuthenticatorData`](/reference/main/AuthenticatorData)
+- [`AuthenticatorDataFlags`](/reference/main/AuthenticatorDataFlags)
 - [`ClientData`](/reference/main/ClientData)
 - [`COSEEC2PublicKey`](/reference/main/COSEEC2PublicKey)
 - [`COSEOKPPublicKey`](/reference/main/COSEOKPPublicKey)

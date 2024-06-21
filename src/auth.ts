@@ -1,6 +1,7 @@
-import { bigEndian } from "@oslojs/binary";
+import { bigEndian, compareBytes } from "@oslojs/binary";
 import { base64url } from "@oslojs/encoding";
 import { COSEPublicKey, decodeCOSEPublicKey } from "./cose.js";
+import { sha256 } from "@oslojs/crypto/sha2";
 
 export function parseClientDataJSON(encoded: Uint8Array): ClientData {
 	let parsed: unknown;
@@ -119,8 +120,10 @@ export function parseAuthenticatorData(encoded: Uint8Array): AuthenticatorData {
 		throw new AuthenticatorDataParseError("Insufficient bytes");
 	}
 	const relyingPartyIdHash = encoded.slice(0, 32);
-	const userPresent = (encoded[32] & 0x01) === 1;
-	const userVerified = ((encoded[32] >> 2) & 0x01) === 1;
+	const flags: AuthenticatorDataFlags = {
+		userPresent: (encoded[32] & 0x01) === 1,
+		userVerified: ((encoded[32] >> 2) & 0x01) === 1
+	};
 	const signatureCounter = bigEndian.uint32(encoded.slice(33, 37));
 	const includesAttestedCredentialData = ((encoded[32] >> 6) & 0x01) === 1;
 	let credential: WebAuthnCredential | null = null;
@@ -146,24 +149,42 @@ export function parseAuthenticatorData(encoded: Uint8Array): AuthenticatorData {
 			publicKey: credentialPublicKey
 		};
 	}
-	const authenticatorData: AuthenticatorData = {
-		relyingPartyIdHash,
-		userPresent,
-		userVerified,
-		signatureCounter,
-		credential,
-		extensions: null
-	};
+	const authenticatorData = new AuthenticatorData(relyingPartyIdHash, flags, signatureCounter, credential, null);
 	return authenticatorData;
 }
 
-export interface AuthenticatorData {
-	relyingPartyIdHash: Uint8Array;
+export interface AuthenticatorDataFlags {
 	userPresent: boolean;
 	userVerified: boolean;
-	signatureCounter: number;
-	credential: WebAuthnCredential | null;
-	extensions: null;
+}
+
+export class AuthenticatorData {
+	public relyingPartyIdHash: Uint8Array;
+	public userPresent: boolean;
+	public userVerified: boolean;
+	public signatureCounter: number;
+	public credential: WebAuthnCredential | null;
+	public extensions: null;
+
+	constructor(
+		relyingPartyIdHash: Uint8Array,
+		flags: AuthenticatorDataFlags,
+		signatureCounter: number,
+		credential: WebAuthnCredential | null,
+		extensions: null
+	) {
+		this.relyingPartyIdHash = relyingPartyIdHash;
+		this.userPresent = flags.userPresent;
+		this.userVerified = flags.userVerified;
+		this.signatureCounter = signatureCounter;
+		this.credential = credential;
+		this.extensions = extensions;
+	}
+
+	public verifyRelyingPartyIdHash(relyingPartyId: string): boolean {
+		const relyingPartyIdHash = sha256(new TextEncoder().encode(relyingPartyId));
+		return compareBytes(this.relyingPartyIdHash, relyingPartyIdHash);
+	}
 }
 
 export class AuthenticatorDataParseError extends Error {

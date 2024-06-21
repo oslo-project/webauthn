@@ -1,8 +1,8 @@
-import { test, expect } from "vitest";
+import { test, expect, describe } from "vitest";
 import { ClientDataType, parseAuthenticatorData, parseClientDataJSON } from "./auth.js";
 import { COSEPublicKey } from "./cose.js";
 
-import type { AuthenticatorData, WebAuthnCredential, ClientData } from "./auth.js";
+import { AuthenticatorData, type WebAuthnCredential, type ClientData } from "./auth.js";
 
 const authenticatorData = new Uint8Array([
 	0x49, 0x96, 0x0d, 0xe5, 0x88, 0x0e, 0x8c, 0x68, 0x74, 0x34, 0x17, 0x0f, 0x64, 0x76, 0x60, 0x5b, 0x8f, 0xe4, 0xae,
@@ -38,17 +38,19 @@ const expectedAttestationCredential: WebAuthnCredential = {
 	})
 };
 
-const expectedAuthenticatorData: AuthenticatorData = {
-	relyingPartyIdHash: new Uint8Array([
+const expectedAuthenticatorData = new AuthenticatorData(
+	new Uint8Array([
 		0x49, 0x96, 0x0d, 0xe5, 0x88, 0x0e, 0x8c, 0x68, 0x74, 0x34, 0x17, 0x0f, 0x64, 0x76, 0x60, 0x5b, 0x8f, 0xe4, 0xae,
 		0xb9, 0xa2, 0x86, 0x32, 0xc7, 0x99, 0x5c, 0xf3, 0xba, 0x83, 0x1d, 0x97, 0x63
 	]),
-	userPresent: true,
-	userVerified: true,
-	signatureCounter: 0,
-	credential: expectedAttestationCredential,
-	extensions: null
-};
+	{
+		userPresent: true,
+		userVerified: true
+	},
+	0,
+	expectedAttestationCredential,
+	null
+);
 
 const clientDataJSON = new Uint8Array([
 	0x7b, 0x22, 0x74, 0x79, 0x70, 0x65, 0x22, 0x3a, 0x22, 0x77, 0x65, 0x62, 0x61, 0x75, 0x74, 0x68, 0x6e, 0x2e, 0x63,
@@ -69,6 +71,13 @@ const expectedClientData: ClientData = {
 test("parseAuthenticatorData()", () => {
 	const parsed = parseAuthenticatorData(authenticatorData);
 	expect(parsed).toStrictEqual(expectedAuthenticatorData);
+});
+
+describe("AuthenticatorData", () => {
+	test("AuthenticatorData.verifyRelyingPartyIdHash()", () => {
+		expect(expectedAuthenticatorData.verifyRelyingPartyIdHash("localhost")).toBe(true);
+		expect(expectedAuthenticatorData.verifyRelyingPartyIdHash("example.com")).toBe(false);
+	});
 });
 
 test("parseClientDataJSON()", () => {

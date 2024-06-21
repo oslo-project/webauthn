@@ -1,5 +1,9 @@
 # @oslojs/webauthn
 
+## 0.5.0
+
+- [Breaking] `AuthenticatorData` is now a class
+
 ## 0.4.0
 
 - [Breaking] Remove `verifyECDSASignature()`, `verifyRSASSAPKCS1v1_5Signature()`, `verifyRSASSAPSSSignature()`
