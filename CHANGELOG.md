@@ -1,5 +1,9 @@
 # @oslojs/webauthn
 
+## 0.5.1
+
+- Remove experimental tag
+
 ## 0.5.0
 
 - [Breaking] `AuthenticatorData` is now a class

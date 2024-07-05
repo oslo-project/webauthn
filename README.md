@@ -2,8 +2,6 @@
 
 **Documentation: https://webauthn.oslojs.dev**
 
-> [!CAUTION] **This package is highly experimental!**
-
 A JavaScript library for working with the Web Authentication API on the server by [Oslo](https://oslojs.dev).
 
 - Runtime-agnostic
