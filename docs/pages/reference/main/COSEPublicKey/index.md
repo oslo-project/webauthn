@@ -6,12 +6,7 @@ title: "COSEPublicKey"
 
 Represents a COSE pubic key.
 
-This takes the decoded COSE public key, where:
-
-- COSE integers are `Number`
-- COSE bit strings are `Uint8Array`
-- COSE arrays are JS arrays
-- COSE maps are JS objects with stringified keys
+This is not intended to be constructed directly.
 
 ## Constructor
 
