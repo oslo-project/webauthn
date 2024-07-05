@@ -1,5 +1,9 @@
 # @oslojs/webauthn
 
+## 0.5.2
+
+- Update dependencies.
+
 ## 0.5.1
 
 - Remove experimental tag

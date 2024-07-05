@@ -105,7 +105,7 @@ if (clientData.type !== ClientDataType.Create) {
 	throw new Error("Invalid client data type");
 }
 
-if ((!verifyChallenge(expectedChallenge))) {
+if (!verifyChallenge(expectedChallenge)) {
 	throw new Error("Invalid challenge");
 }
 // Use "http://localhost:PORT" for localhost
