@@ -58,7 +58,6 @@ import {
 	createAssertionSignatureMessage
 } from "@oslojs/webauthn";
 import { decodeSEC1PublicKey, decodeX509ECDSASignature, p256, verifyECDSASignature } from "@oslojs/crypto/ecdsa";
-import { compareBytes } from "@oslojs/binary";
 import { sha256 } from "@oslojs/crypto/sha2";
 
 // Bytes sent from the client

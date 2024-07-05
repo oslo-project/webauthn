@@ -70,7 +70,6 @@ We recommend using [`@oslojs/crypto`](https://crypto.oslojs.dev) for handling EC
 ```ts
 import { parseAttestationObject, AttestationStatementFormat, parseClientDataJSON } from "@oslojs/webauthn";
 import { ECDSAPublicKey, p256 } from "@oslojs/crypto/ecdsa";
-import { compareBytes } from "@oslojs/binary";
 
 // Bytes sent from the client
 const encodedAttestationObject = new Uint8Array();
