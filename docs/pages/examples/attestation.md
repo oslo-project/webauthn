@@ -8,6 +8,7 @@ You can get the attestation statement from `parseAttestationObject()` and parse 
 
 ```ts
 import { parseAttestationObject, AttestationStatementFormat } from "@oslojs/webauthn";
+
 const { attestationStatement, authenticatorData } = parseAttestationObject(encodedAttestationObject);
 if (attestationStatement.format !== AttestationStatementFormat.Packed) {
 	throw new Error("Invalid attestation statement format");

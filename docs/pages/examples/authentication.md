@@ -49,9 +49,7 @@ const response = await fetch("/api/register", {
 
 On the server, parse the attestation object and client data JSON. For the attestation object, verify the attestation statement format, relying party ID hash, and the user present and user verified flags. For the client data JSON, check the challenge and origin. If all checks passes, verify the signature against `createAssertionSignatureMessage()` using the public key of the credential.
 
-We recommend using [`@oslojs/crypto`](https://crypto.oslojs.dev) for handling ECDSA public keys and signatures. `verifyECDSA()` is not fully constant-time, though it's fine for most cases since it doesn't use any secrets (e.g. private key).
-
-For ECDSA, signatures are ASN.1 DER encoded. We recommend using [`@oslojs/asn1`](https://asn1.oslojs.dev) for decoding.
+We recommend using [`@oslojs/crypto`](https://crypto.oslojs.dev) for handling ECDSA public keys and signatures. `verifyECDSASignature()` is not fully constant-time, though it's fine for most cases since it doesn't use any secrets (e.g. private key). For ECDSA, signatures are ASN.1 DER encoded.
 
 ```ts
 import {
@@ -60,10 +58,9 @@ import {
 	parseClientDataJSON,
 	createAssertionSignatureMessage
 } from "@oslojs/webauthn";
-import { decodeSEC1PublicKey, p256, verifyECDSA } from "@oslojs/crypto/ecdsa";
+import { decodeSEC1PublicKey, decodeX509ECDSASignature, p256, verifyECDSASignature } from "@oslojs/crypto/ecdsa";
 import { compareBytes } from "@oslojs/binary";
 import { sha256 } from "@oslojs/crypto/sha2";
-import { parseASN1NoLeftoverBytes } from "@oslojs/asn1";
 
 // Bytes sent from the client
 const credentialId = new Uint8Array();
@@ -104,12 +101,10 @@ if (clientData.crossOrigin !== null && clientData.crossOrigin) {
 // Get public key and user ID from credential ID
 const credential = getCredential(credentialId);
 // Decode DER-encoded signature
-const signatureSequence = parseASN1NoLeftoverBytes(signature).sequence();
-const r = signatureSequence.at(0).integer().value;
-const s = signatureSequence.at(1).integer().value;
-const ecdsaPublicKey = decodeSEC1PublicKey(credential.encodedPublicKey);
+const ecdsaSignature = decodeX509ECDSASignature(signature);
+const ecdsaPublicKey = decodeSEC1PublicKey(p256, credential.encodedPublicKey);
 const hash = sha256(createAssertionSignatureMessage(authenticatorData, clientDataJSON));
-const valid = verifyECDSA(ecdsaPublicKey, hash, r, s);
+const valid = verifyECDSASignature(ecdsaPublicKey, hash, ecdsaSignature);
 if (valid) {
 	const userId = credential.userId;
 	// ...

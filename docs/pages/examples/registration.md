@@ -121,5 +121,5 @@ if (clientData.crossOrigin !== null && clientData.crossOrigin) {
 
 // Store the credential ID, algorithm (ES256), and public key with the user's user ID
 const credentialId = authenticatorData.credential.id;
-const encodedPublicKey = new ECDSAPublicKey(p256, cosePublicKey.x, cosePublicKey.y).encodeUncompressed();
+const encodedPublicKey = new ECDSAPublicKey(p256, cosePublicKey.x, cosePublicKey.y).encodeSEC1Uncompressed();
 ```
