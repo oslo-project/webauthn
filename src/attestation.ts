@@ -1,9 +1,8 @@
 import { decodeCBORToNativeValueNoLeftoverBytes } from "@oslojs/cbor";
 import { parseAuthenticatorData } from "./auth.js";
-import { COSE_ALGORITHM_ID_MAP } from "./cose.js";
 
 import type { AuthenticatorData } from "./auth.js";
-import type { COSEAlgorithm } from "./cose.js";
+import { getCOSEAlgorithmFromId, type COSEAlgorithm } from "./cose.js";
 
 export function parseAttestationObject(encoded: Uint8Array): AttestationObject {
 	let decoded: unknown;
@@ -76,7 +75,8 @@ export class AttestationStatement {
 		if (!("alg" in this.decoded) || typeof this.decoded.alg !== "number") {
 			throw new AttestationStatementParseError("Invalid or missing property 'alg'");
 		}
-		if (!(this.decoded.alg in COSE_ALGORITHM_ID_MAP)) {
+		const algorithm = getCOSEAlgorithmFromId(this.decoded.alg);
+		if (algorithm === null) {
 			throw new AttestationStatementParseError(`Unknown algorithm ID ${this.decoded.alg}`);
 		}
 
@@ -101,7 +101,7 @@ export class AttestationStatement {
 		}
 
 		const statement: PackedAttestationStatement = {
-			algorithm: COSE_ALGORITHM_ID_MAP[this.decoded.alg],
+			algorithm,
 			signature: this.decoded.sig,
 			certificates
 		};
@@ -115,7 +115,8 @@ export class AttestationStatement {
 		if (!("alg" in this.decoded) || typeof this.decoded.alg !== "number") {
 			throw new AttestationStatementParseError("Invalid or missing property 'alg'");
 		}
-		if (!(this.decoded.alg in COSE_ALGORITHM_ID_MAP)) {
+		const algorithm = getCOSEAlgorithmFromId(this.decoded.alg);
+		if (algorithm === null) {
 			throw new AttestationStatementParseError(`Unknown algorithm ID ${this.decoded.alg}`);
 		}
 		if (!("sig" in this.decoded) || !(this.decoded.sig instanceof Uint8Array)) {
@@ -143,7 +144,7 @@ export class AttestationStatement {
 		}
 
 		const statement: TPMAttestationStatement = {
-			algorithm: COSE_ALGORITHM_ID_MAP[this.decoded.alg],
+			algorithm: algorithm,
 			signature: this.decoded.sig,
 			certificates,
 			attestation: this.decoded.certInfo,
@@ -159,7 +160,8 @@ export class AttestationStatement {
 		if (!("alg" in this.decoded) || typeof this.decoded.alg !== "number") {
 			throw new AttestationStatementParseError("Invalid or missing property 'alg'");
 		}
-		if (!(this.decoded.alg in COSE_ALGORITHM_ID_MAP)) {
+		const algorithm = getCOSEAlgorithmFromId(this.decoded.alg);
+		if (algorithm === null) {
 			throw new AttestationStatementParseError(`Unknown algorithm ID ${this.decoded.alg}`);
 		}
 		if (!("sig" in this.decoded) || !(this.decoded.sig instanceof Uint8Array)) {
@@ -180,7 +182,7 @@ export class AttestationStatement {
 		}
 
 		const statement: AndroidKeyAttestationStatement = {
-			algorithm: COSE_ALGORITHM_ID_MAP[this.decoded.alg],
+			algorithm: algorithm,
 			signature: this.decoded.sig,
 			certificates
 		};

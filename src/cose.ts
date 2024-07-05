@@ -277,7 +277,14 @@ export enum COSEKeyType {
 	WalnutDSA
 }
 
-export const COSE_ALGORITHM_ID_MAP: Record<number, COSEAlgorithm> = {
+export function getCOSEAlgorithmFromId(id: number): COSEAlgorithm | null {
+	if (id in COSE_ALGORITHM_ID_MAP) {
+		return COSE_ALGORITHM_ID_MAP[id];
+	}
+	return null;
+}
+
+const COSE_ALGORITHM_ID_MAP: Record<number, COSEAlgorithm> = {
 	"-65535": COSEAlgorithm.RS1,
 	"-65534": COSEAlgorithm.A128CTR,
 	"-65533": COSEAlgorithm.A192CTR,
@@ -349,7 +356,7 @@ export const COSE_ALGORITHM_ID_MAP: Record<number, COSEAlgorithm> = {
 	33: COSEAlgorithm.AESCCM_64_128_256
 };
 
-export const COSE_KEY_ID_MAP: Record<number, COSEKeyType> = {
+const COSE_KEY_ID_MAP: Record<number, COSEKeyType> = {
 	1: COSEKeyType.OKP,
 	2: COSEKeyType.EC2,
 	3: COSEKeyType.RSA,
@@ -358,7 +365,7 @@ export const COSE_KEY_ID_MAP: Record<number, COSEKeyType> = {
 	6: COSEKeyType.WalnutDSA
 };
 
-export const COSE_ELLIPTIC_CURVE_MAP: Record<number, COSEEllipticCurve> = {
+const COSE_ELLIPTIC_CURVE_MAP: Record<number, COSEEllipticCurve> = {
 	1: COSEEllipticCurve.P256,
 	2: COSEEllipticCurve.P384,
 	3: COSEEllipticCurve.P521,
