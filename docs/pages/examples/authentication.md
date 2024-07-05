@@ -6,7 +6,7 @@ title: "Authentication"
 
 Generate a random challenge on the server and call `navigator.credentials.get()` to authenticate the user with a credential on their device.
 
-Send the credential ID, signature, attestation object, and client data JSON to the server.
+Send the credential ID, signature, authenticator data, and client data JSON to the server.
 
 ```ts
 import { base64 } from "@oslojs/encoding";
@@ -23,7 +23,6 @@ crypto.getRandomValues(userId);
 const credential = await await navigator.credentials.get({
 	publicKey: {
 		challenge,
-		attestation: "none",
 		userVerification: "required"
 	}
 });
@@ -41,19 +40,19 @@ const response = await fetch("/api/register", {
 	body: JSON.stringify({
 		credentialId: base64.encode(new Uint8Array(credential.rawId)),
 		signature: base64.encode(new Uint8Array(credential.response.signature)),
-		attestationObject: base64.encode(new Uint8Array(credential.response.attestationObject)),
+		authenticatorData: base64.encode(new Uint8Array(credential.response.authenticatorData)),
 		clientDataJSON: base64.encode(new Uint8Array(credential.response.clientDataJSON))
 	})
 });
 ```
 
-On the server, parse the attestation object and client data JSON. For the attestation object, verify the attestation statement format, relying party ID hash, and the user present and user verified flags. For the client data JSON, check the challenge and origin. If all checks passes, verify the signature against `createAssertionSignatureMessage()` using the public key of the credential.
+On the server, parse the authenticator data and client data JSON. For the authenticator data, relying party ID hash, and the user present and user verified flags. For the client data JSON, check the challenge and origin. If all checks passes, verify the signature against `createAssertionSignatureMessage()` using the public key of the credential.
 
-We recommend using [`@oslojs/crypto`](https://crypto.oslojs.dev) for handling ECDSA public keys and signatures. `verifyECDSASignature()` is not fully constant-time, though it's fine for most cases since it doesn't use any secrets (e.g. private key). For ECDSA, signatures are ASN.1 DER encoded.
+We recommend using [`@oslojs/crypto`](https://crypto.oslojs.dev) for handling ECDSA public keys and signatures. `verifyECDSASignature()` is not fully constant-time but it's fine here since the message and key is public. For ECDSA, signatures are ASN.1 DER encoded.
 
 ```ts
 import {
-	parseAttestationObject,
+	parseAuthenticatorData,
 	AttestationStatementFormat,
 	parseClientDataJSON,
 	createAssertionSignatureMessage
@@ -65,13 +64,10 @@ import { sha256 } from "@oslojs/crypto/sha2";
 // Bytes sent from the client
 const credentialId = new Uint8Array();
 const signature = new Uint8Array();
-const encodedAttestationObject = new Uint8Array();
+const encodedAuthenticatorData = new Uint8Array();
 const clientDataJSON = new Uint8Array();
 
-const { attestationStatement, authenticatorData } = parseAttestationObject(encodedAttestationObject);
-if (attestationStatement.format !== AttestationStatementFormat.None) {
-	throw new Error("Invalid attestation statement format");
-}
+const authenticatorData = parseAuthenticatorData(encodedAuthenticatorData);
 // Use "localhost" for localhost
 if (!authenticatorData.verifyRelyingPartyIdHash("example.com")) {
 	throw new Error("Invalid relying party ID hash");
@@ -85,12 +81,10 @@ if (clientData.type !== ClientDataType.Get) {
 	throw new Error("Invalid client data type");
 }
 
-// Verify that the challenge
-const expectedChallenge = getChallenge(); // make sure to delete the challenge after use
-if ((!compareBytes(clientData.challenge), expectedChallenge)) {
+if (!verifyChallenge(expectedChallenge)) {
 	throw new Error("Invalid challenge");
 }
-// Use "http://localhost:5000" for localhost
+// Use "http://localhost:PORT" for localhost
 if (clientData.origin !== "https://example.com") {
 	throw new Error("Invalid origin");
 }

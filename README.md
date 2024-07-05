@@ -12,15 +12,13 @@ A JavaScript library for working with the Web Authentication API on the server b
 
 ```ts
 import { parseAttestationObject, COSEKeyType, COSEAlgorithm } from "@oslojs/webauthn";
-import { sha256 } from "@oslojs/crypto";
-import { compareBytes } from "@oslojs/binary";
 
 const { attestationStatement, authenticatorData } = await parseAttestationObject(encoded);
 if (!authenticatorData.userPresent || !authenticatorData.userVerified) {
 	throw new Error("User must be verified");
 }
-const relyingPartyIdHash = sha256("localhost");
-if (!compareBytes(authenticatorData.relyingPartyIdHash, relyingPartyIdHash)) {
+
+if (!authenticatorData.verifyRelyingPartyIdHash("example.com")) {
 	throw new Error("Invalid relying party ID hash");
 }
 if (authenticatorData.credential === null) {

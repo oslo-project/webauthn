@@ -106,12 +106,10 @@ if (clientData.type !== ClientDataType.Create) {
 	throw new Error("Invalid client data type");
 }
 
-// Verify that the challenge is valid.
-const expectedChallenge = getChallenge(); // make sure to delete the challenge after use
-if ((!compareBytes(clientData.challenge), expectedChallenge)) {
+if ((!verifyChallenge(expectedChallenge))) {
 	throw new Error("Invalid challenge");
 }
-// Use "http://localhost:5000" for localhost
+// Use "http://localhost:PORT" for localhost
 if (clientData.origin !== "https://example.com") {
 	throw new Error("Invalid origin");
 }
