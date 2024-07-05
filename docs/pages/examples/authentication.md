@@ -18,7 +18,7 @@ const challenge = new Uint8Array(20);
 // random ID for the authenticator
 // this does not need to match the actual user ID
 const userId = new Uint8Array(20);
-crypto.randomValues(userId);
+crypto.getRandomValues(userId);
 
 const credential = await await navigator.credentials.get({
 	publicKey: {
