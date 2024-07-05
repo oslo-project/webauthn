@@ -1,8 +1,9 @@
 import { test, expect, describe } from "vitest";
 import { ClientDataType, parseAuthenticatorData, parseClientDataJSON } from "./auth.js";
 import { COSEPublicKey } from "./cose.js";
+import { AuthenticatorData } from "./auth.js";
 
-import { AuthenticatorData, type WebAuthnCredential, type ClientData } from "./auth.js";
+import type { WebAuthnCredential, ClientData } from "./auth.js";
 
 const authenticatorData = new Uint8Array([
 	0x49, 0x96, 0x0d, 0xe5, 0x88, 0x0e, 0x8c, 0x68, 0x74, 0x34, 0x17, 0x0f, 0x64, 0x76, 0x60, 0x5b, 0x8f, 0xe4, 0xae,
