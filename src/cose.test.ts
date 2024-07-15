@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { COSEEllipticCurve, COSEPublicKey } from "./cose.js";
+import { COSEPublicKey, coseEllipticCurveEd25519, coseEllipticCurveP256 } from "./cose.js";
 
 import type { COSEEC2PublicKey, COSEOKPPublicKey, COSERSAPublicKey } from "./cose.js";
 
@@ -13,7 +13,7 @@ describe("COSEPublicKey", () => {
 		};
 		const key = new COSEPublicKey(decoded);
 		expect(key.ec2()).toStrictEqual({
-			curve: COSEEllipticCurve.P256,
+			curve: coseEllipticCurveP256,
 			x: 1n << 8n,
 			y: 1n << 16n
 		} satisfies COSEEC2PublicKey);
@@ -35,12 +35,12 @@ describe("COSEPublicKey", () => {
 	test("COSEPublicKey.okp()", () => {
 		const decoded = {
 			1: 1,
-			"-1": 4,
+			"-1": 6,
 			"-2": new Uint8Array([0x01, 0x02, 0x03])
 		};
 		const key = new COSEPublicKey(decoded);
 		expect(key.okp()).toStrictEqual({
-			curve: COSEEllipticCurve.X25519,
+			curve: coseEllipticCurveEd25519,
 			x: new Uint8Array([0x01, 0x02, 0x03])
 		} satisfies COSEOKPPublicKey);
 	});

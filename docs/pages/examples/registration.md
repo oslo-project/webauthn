@@ -68,7 +68,13 @@ On the server, parse the attestation object and client data JSON. For the attest
 We recommend using [`@oslojs/crypto`](https://crypto.oslojs.dev) for handling ECDSA public keys and signatures.
 
 ```ts
-import { parseAttestationObject, AttestationStatementFormat, parseClientDataJSON } from "@oslojs/webauthn";
+import {
+	parseAttestationObject,
+	AttestationStatementFormat,
+	parseClientDataJSON,
+	coseAlgorithmES256,
+	coseEllipticCurveP256
+} from "@oslojs/webauthn";
 import { ECDSAPublicKey, p256 } from "@oslojs/crypto/ecdsa";
 
 // Bytes sent from the client
@@ -89,14 +95,14 @@ if (!authenticatorData.userPresent || !authenticatorData.userVerified) {
 if (authenticatorData.credential === null) {
 	throw new Error("Missing credential");
 }
-if (authenticatorData.credential.publicKey.algorithm() !== COSEAlgorithm.ES256) {
+if (authenticatorData.credential.publicKey.algorithm() !== coseAlgorithmES256) {
 	throw new Error("Unsupported algorithm");
 }
 
 // Parse the COSE key as an EC2 key
 // .rsa() for RSA, .okp() for EdDSA, etc
 const cosePublicKey = authenticatorData.credential.publicKey.ec2();
-if (cosePublicKey.curve !== COSEEllipticCurve.P256) {
+if (cosePublicKey.curve !== coseEllipticCurveP256) {
 	throw new Error("Unsupported algorithm");
 }
 

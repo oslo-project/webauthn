@@ -9,14 +9,13 @@ Represents a COSE octet key pair (OKP) public key for EdDSA as defined in [RFC 9
 ## Definition
 
 ```ts
-//$ COSEEllipticCurve=/reference/main/COSEEllipticCurve
 interface ECDSAPublicKey {
-	curve: $$COSEEllipticCurve;
+	curve: number;
 	x: Uint8Array;
 }
 ```
 
 ### Properties
 
-- `curve`
+- `curve`: IANA COSE elliptic curve iD.
 - `x`

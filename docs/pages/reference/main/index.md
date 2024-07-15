@@ -4,6 +4,14 @@ title: "@oslojs/webauthn"
 
 # @oslojs/webauthn
 
+## Constants
+
+- [`coseAlgorithmEdDSA`](/reference/main/coseAlgorithmEdDSA)
+- [`coseAlgorithmES256`](/reference/main/coseAlgorithmES256)
+- [`coseAlgorithmRS256`](/reference/main/coseAlgorithmRS256)
+- [`coseEllipticCurveEd25519`](/reference/main/coseEllipticCurveEd25519)
+- [`coseEllipticCurveP256`](/reference/main/coseEllipticCurveP256)
+
 ## Classes
 
 - [`AttestationObjectParseError`](/reference/main/AttestationObjectParseError)
@@ -12,7 +20,6 @@ title: "@oslojs/webauthn"
 - [`AuthenticatorDataParseError`](/reference/main/AuthenticatorDataParseError)
 - [`ClientDataParseError`](/reference/main/ClientDataParseError)
 - [`COSEPublicKey`](/reference/main/COSEPublicKey)
-- [`COSEParseError`](/reference/main/COSEParseError)
 
 ## Functions
 
@@ -25,8 +32,6 @@ title: "@oslojs/webauthn"
 
 - [`AttestationStatementFormat`](/reference/main/AttestationStatementFormat)
 - [`ClientDataType`](/reference/main/ClientDataType)
-- [`COSEAlgorithm`](/reference/main/COSEAlgorithm)
-- [`COSEEllipticCurve`](/reference/main/COSEEllipticCurve)
 - [`COSEKeyType`](/reference/main/COSEKeyType)
 - [`TokenBindingStatus`](/reference/main/TokenBindingStatus)
 

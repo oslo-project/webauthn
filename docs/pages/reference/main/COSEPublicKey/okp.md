@@ -4,9 +4,9 @@ title: "COSEPublicKey.okp()"
 
 # COSEPublicKey.okp()
 
-Parses the COSE key as an octet key pair key.
+Parses the COSE key as an octet key pair key. Throws an `Error` if fails to parse the key.
 
-Can throw [`COSEParseError`](/reference/main/COSEParseError). This method does not check the `key_ops` parameter.
+This method does not check the `key_ops` parameter.
 
 ## Definition
 

@@ -4,9 +4,9 @@ title: "COSEPublicKey.rsa()"
 
 # COSEPublicKey.rsa()
 
-Parses the COSE key as an RSA key.
+Parses the COSE key as an RSA key. Throws an `Error` if fails to parse the key.
 
-Can throw [`COSEParseError`](/reference/main/COSEParseError). This method does not check the `key_ops` parameter.
+This method does not check the `key_ops` parameter.
 
 ## Definition
 

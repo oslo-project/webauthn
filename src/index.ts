@@ -7,7 +7,15 @@ export {
 	parseClientDataJSON,
 	TokenBindingStatus
 } from "./auth.js";
-export { COSEAlgorithm, COSEPublicKey, COSEEllipticCurve, COSEKeyType, COSEParseError } from "./cose.js";
+export {
+	COSEPublicKey,
+	COSEKeyType,
+	coseAlgorithmES256,
+	coseAlgorithmEdDSA,
+	coseAlgorithmRS256,
+	coseEllipticCurveEd25519,
+	coseEllipticCurveP256
+} from "./cose.js";
 export { createAssertionSignatureMessage } from "./signature.js";
 
 export type {
