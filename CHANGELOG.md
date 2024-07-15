@@ -1,6 +1,6 @@
 # @oslojs/webauthn
 
-## next
+## 0.6.0
 
 - [Breaking] Remove `COSEAlgorithm` and `COSEEllipticCurve` enums
 - [Breaking] Remove `COSEParseError`
