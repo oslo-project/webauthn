@@ -4,9 +4,9 @@ title: "COSEPublicKey.ec2()"
 
 # COSEPublicKey.ec2()
 
-Parses the COSE key as an elliptic curve (EC2) key. This only supports keys where both the x and y coordinates are defined.
+Parses the COSE key as an elliptic curve (EC2) key. Throws an `Error` if fails to parse the key. This only supports keys where both the x and y coordinates are defined.
 
-Can throw [`COSEParseError`](/reference/main/COSEParseError). This method does not check the `key_ops` parameter.
+This method does not check the `key_ops` parameter.
 
 ## Definition
 

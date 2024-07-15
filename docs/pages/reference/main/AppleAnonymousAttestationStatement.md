@@ -9,7 +9,6 @@ See [Apple Anonymous Attestation Statement Format](https://www.w3.org/TR/webauth
 ## Definition
 
 ```ts
-//$ COSEAlgorithm=/reference/main/COSEAlgorithm
 interface AppleAnonymousAttestationStatement {
 	certificates: Uint8Array[];
 }

@@ -9,7 +9,6 @@ See [Android SafetyNet Attestation Statement Format](https://www.w3.org/TR/webau
 ## Definition
 
 ```ts
-//$ COSEAlgorithm=/reference/main/COSEAlgorithm
 interface AndroidSafetyNetAttestationStatement {
 	version: string;
 	response: Uint8Array;

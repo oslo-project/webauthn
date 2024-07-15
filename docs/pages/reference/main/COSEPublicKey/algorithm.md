@@ -4,11 +4,10 @@ title: "COSEPublicKey.algorithm()"
 
 # COSEPublicKey.algorithm()
 
-Returns the algorithm of the COSE key using the `alg` parameter. Throws [`COSEParseError`](/reference/main/COSEParseError) if the `alg` parameter is undefined, is the wrong type, or is not registered on IANA.
+Returns the COSE algorithm ID `alg` parameter. Throws an `Error` if the parameter is undefined or is the wrong type.
 
 ## Definition
 
 ```ts
-//$ COSEAlgorithm=/reference/main/COSEAlgorithm
-function algorithm(): $$COSEAlgorithm;
+function algorithm(): number;
 ```

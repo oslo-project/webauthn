@@ -129,7 +129,7 @@ export function parseAuthenticatorData(encoded: Uint8Array): AuthenticatorData {
 	let credential: WebAuthnCredential | null = null;
 	if (includesAttestedCredentialData) {
 		if (encoded.byteLength < 37 + 18) {
-			throw new AuthenticatorDataParseError("");
+			throw new AuthenticatorDataParseError("Invalid credential data");
 		}
 		const aaguid = encoded.slice(37, 53);
 		const credentialIdLength = bigEndian.uint16(encoded.slice(53, 55));
@@ -140,7 +140,7 @@ export function parseAuthenticatorData(encoded: Uint8Array): AuthenticatorData {
 		let credentialPublicKey: COSEPublicKey;
 		try {
 			[credentialPublicKey] = decodeCOSEPublicKey(encoded.slice(55 + credentialIdLength));
-		} catch {
+		} catch (e) {
 			throw new AuthenticatorDataParseError("Failed to parse public key");
 		}
 		credential = {

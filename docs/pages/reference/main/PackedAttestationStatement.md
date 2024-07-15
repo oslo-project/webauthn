@@ -9,9 +9,8 @@ See [Packed Attestation Statement Format](https://www.w3.org/TR/webauthn-2/#sctn
 ## Definition
 
 ```ts
-//$ COSEAlgorithm=/reference/main/COSEAlgorithm
 interface PackedAttestationStatement {
-	algorithm: $$COSEAlgorithm;
+	algorithm: number;
 	signature: Uint8Array;
 	certificates: Uint8Array[] | null;
 }
@@ -19,6 +18,6 @@ interface PackedAttestationStatement {
 
 ### Properties
 
-- `algorithm`
+- `algorithm`: IANA COSE algorithm ID
 - `signature`
 - `certificates`: If defined, a series of X.509 encoded certificates, where the first one is the attestation certificate and the rest is its certificate chain.

@@ -4,7 +4,7 @@ title: "COSEPublicKey.isAlgorithmDefined()"
 
 # COSEPublicKey.isAlgorithmDefined()
 
-Returns if the `alg` parameter is defined. Throws [`COSEParseError`](/reference/main/COSEParseError) if the `alg` is the wrong type.
+Returns if the `alg` parameter is defined. Throws an `Error` if the parameter is the wrong type.
 
 ## Definition
 

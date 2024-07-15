@@ -9,7 +9,7 @@ A JavaScript library for working with the Web Authentication API on the server b
 - Fully typed
 
 ```ts
-import { parseAttestationObject, COSEKeyType, COSEAlgorithm } from "@oslojs/webauthn";
+import { parseAttestationObject, COSEKeyType, coseAlgorithmES256 } from "@oslojs/webauthn";
 
 const { attestationStatement, authenticatorData } = await parseAttestationObject(encoded);
 if (!authenticatorData.userPresent || !authenticatorData.userVerified) {
@@ -25,7 +25,7 @@ if (authenticatorData.credential === null) {
 if (authenticatorData.credential.publicKey.type() !== COSEKeyType.EC2) {
 	throw new Error("Unsupported algorithm");
 }
-if (authenticatorData.credential.publicKey.algorithm() !== COSEAlgorithm.ES256) {
+if (authenticatorData.credential.publicKey.algorithm() !== coseAlgorithmES256) {
 	throw new Error("Unsupported algorithm");
 }
 const publicKey = authenticatorData.credential.publicKey.ec2();

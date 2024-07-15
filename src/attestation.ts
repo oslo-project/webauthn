@@ -2,7 +2,6 @@ import { decodeCBORToNativeValueNoLeftoverBytes } from "@oslojs/cbor";
 import { parseAuthenticatorData } from "./auth.js";
 
 import type { AuthenticatorData } from "./auth.js";
-import { getCOSEAlgorithmFromId, type COSEAlgorithm } from "./cose.js";
 
 export function parseAttestationObject(encoded: Uint8Array): AttestationObject {
 	let decoded: unknown;
@@ -70,38 +69,34 @@ export class AttestationStatement {
 
 	public packed(): PackedAttestationStatement {
 		if (this.format !== AttestationStatementFormat.Packed) {
-			throw new AttestationStatementParseError("Invalid format");
+			throw new Error("Invalid format");
 		}
 		if (!("alg" in this.decoded) || typeof this.decoded.alg !== "number") {
-			throw new AttestationStatementParseError("Invalid or missing property 'alg'");
-		}
-		const algorithm = getCOSEAlgorithmFromId(this.decoded.alg);
-		if (algorithm === null) {
-			throw new AttestationStatementParseError(`Unknown algorithm ID ${this.decoded.alg}`);
+			throw new Error("Invalid or missing property 'alg'");
 		}
 
 		if (!("sig" in this.decoded) || !(this.decoded.sig instanceof Uint8Array)) {
-			throw new AttestationStatementParseError("Invalid or missing property 'sig'");
+			throw new Error("Invalid or missing property 'sig'");
 		}
 		let certificates: Uint8Array[] | null = null;
 		if ("x5c" in this.decoded) {
 			if (!Array.isArray(this.decoded.x5c)) {
-				throw new AttestationStatementParseError("Invalid property 'x5c'");
+				throw new Error("Invalid property 'x5c'");
 			}
 			if (this.decoded.x5c.length < 1) {
-				throw new AttestationStatementParseError("Invalid property 'x5c'");
+				throw new Error("Invalid property 'x5c'");
 			}
 			certificates = [];
 			for (const certificate of this.decoded.x5c) {
 				if (!(certificate instanceof Uint8Array)) {
-					throw new AttestationStatementParseError("Invalid property 'x5c'");
+					throw new Error("Invalid property 'x5c'");
 				}
 				certificates.push(certificate);
 			}
 		}
 
 		const statement: PackedAttestationStatement = {
-			algorithm,
+			algorithm: this.decoded.alg,
 			signature: this.decoded.sig,
 			certificates
 		};
@@ -110,41 +105,37 @@ export class AttestationStatement {
 
 	public tpm(): TPMAttestationStatement {
 		if (this.format !== AttestationStatementFormat.TPM) {
-			throw new AttestationStatementParseError("Invalid format");
+			throw new Error("Invalid format");
 		}
 		if (!("alg" in this.decoded) || typeof this.decoded.alg !== "number") {
-			throw new AttestationStatementParseError("Invalid or missing property 'alg'");
-		}
-		const algorithm = getCOSEAlgorithmFromId(this.decoded.alg);
-		if (algorithm === null) {
-			throw new AttestationStatementParseError(`Unknown algorithm ID ${this.decoded.alg}`);
+			throw new Error("Invalid or missing property 'alg'");
 		}
 		if (!("sig" in this.decoded) || !(this.decoded.sig instanceof Uint8Array)) {
-			throw new AttestationStatementParseError("Invalid or missing property 'sig'");
+			throw new Error("Invalid or missing property 'sig'");
 		}
 		if (!("x5c" in this.decoded) || !Array.isArray(this.decoded.x5c)) {
-			throw new AttestationStatementParseError("Invalid or missing property 'x5c'");
+			throw new Error("Invalid or missing property 'x5c'");
 		}
 		if (this.decoded.x5c.length < 1) {
-			throw new AttestationStatementParseError("Invalid or missing property 'x5c'");
+			throw new Error("Invalid or missing property 'x5c'");
 		}
 		const certificates: Uint8Array[] = [];
 		for (const certificate of this.decoded.x5c) {
 			if (!(certificate instanceof Uint8Array)) {
-				throw new AttestationStatementParseError("Invalid or missing property 'x5c'");
+				throw new Error("Invalid or missing property 'x5c'");
 			}
 			certificates.push(certificate);
 		}
 
 		if (!("certInfo" in this.decoded) || !(this.decoded.certInfo instanceof Uint8Array)) {
-			throw new AttestationStatementParseError("Invalid or missing property 'certInfo'");
+			throw new Error("Invalid or missing property 'certInfo'");
 		}
 		if (!("pubArea" in this.decoded) || !(this.decoded.pubArea instanceof Uint8Array)) {
-			throw new AttestationStatementParseError("Invalid or missing property 'pubArea'");
+			throw new Error("Invalid or missing property 'pubArea'");
 		}
 
 		const statement: TPMAttestationStatement = {
-			algorithm: algorithm,
+			algorithm: this.decoded.alg,
 			signature: this.decoded.sig,
 			certificates,
 			attestation: this.decoded.certInfo,
@@ -155,34 +146,30 @@ export class AttestationStatement {
 
 	public androidKey(): AndroidKeyAttestationStatement {
 		if (this.format !== AttestationStatementFormat.AndroidKey) {
-			throw new AttestationStatementParseError("Invalid format");
+			throw new Error("Invalid format");
 		}
 		if (!("alg" in this.decoded) || typeof this.decoded.alg !== "number") {
-			throw new AttestationStatementParseError("Invalid or missing property 'alg'");
-		}
-		const algorithm = getCOSEAlgorithmFromId(this.decoded.alg);
-		if (algorithm === null) {
-			throw new AttestationStatementParseError(`Unknown algorithm ID ${this.decoded.alg}`);
+			throw new Error("Invalid or missing property 'alg'");
 		}
 		if (!("sig" in this.decoded) || !(this.decoded.sig instanceof Uint8Array)) {
-			throw new AttestationStatementParseError("Invalid or missing property 'sig'");
+			throw new Error("Invalid or missing property 'sig'");
 		}
 		if (!("x5c" in this.decoded) || !Array.isArray(this.decoded.x5c)) {
-			throw new AttestationStatementParseError("Invalid or missing property 'x5c'");
+			throw new Error("Invalid or missing property 'x5c'");
 		}
 		if (this.decoded.x5c.length < 1) {
-			throw new AttestationStatementParseError("Invalid or missing property 'x5c'");
+			throw new Error("Invalid or missing property 'x5c'");
 		}
 		const certificates: Uint8Array[] = [];
 		for (const certificate of this.decoded.x5c) {
 			if (!(certificate instanceof Uint8Array)) {
-				throw new AttestationStatementParseError("Invalid or missing property 'x5c'");
+				throw new Error("Invalid or missing property 'x5c'");
 			}
 			certificates.push(certificate);
 		}
 
 		const statement: AndroidKeyAttestationStatement = {
-			algorithm: algorithm,
+			algorithm: this.decoded.alg,
 			signature: this.decoded.sig,
 			certificates
 		};
@@ -191,13 +178,13 @@ export class AttestationStatement {
 
 	public androidSafetyNet(): AndroidSafetyNetAttestationStatement {
 		if (this.format !== AttestationStatementFormat.AndroidKey) {
-			throw new AttestationStatementParseError("Invalid format");
+			throw new Error("Invalid format");
 		}
 		if (!("ver" in this.decoded) || typeof this.decoded.ver !== "string") {
-			throw new AttestationStatementParseError("Invalid or missing property 'ver'");
+			throw new Error("Invalid or missing property 'ver'");
 		}
 		if (!("response" in this.decoded) || !(this.decoded.response instanceof Uint8Array)) {
-			throw new AttestationStatementParseError("Invalid or missing property 'response'");
+			throw new Error("Invalid or missing property 'response'");
 		}
 
 		const statement: AndroidSafetyNetAttestationStatement = {
@@ -209,20 +196,20 @@ export class AttestationStatement {
 
 	public fidoU2F(): FIDOU2FAttestationStatement {
 		if (this.format !== AttestationStatementFormat.FIDOU2F) {
-			throw new AttestationStatementParseError("Invalid format");
+			throw new Error("Invalid format");
 		}
 		if (!("sig" in this.decoded) || !(this.decoded.sig instanceof Uint8Array)) {
-			throw new AttestationStatementParseError("Invalid or missing property 'sig'");
+			throw new Error("Invalid or missing property 'sig'");
 		}
 		if (!("x5c" in this.decoded) || !Array.isArray(this.decoded.x5c)) {
-			throw new AttestationStatementParseError("Invalid or missing property 'x5c'");
+			throw new Error("Invalid or missing property 'x5c'");
 		}
 		if (this.decoded.x5c.length !== 1) {
-			throw new AttestationStatementParseError("Invalid or missing property 'x5c'");
+			throw new Error("Invalid or missing property 'x5c'");
 		}
 		const certificate = this.decoded.x5c[0];
 		if (!(certificate instanceof Uint8Array)) {
-			throw new AttestationStatementParseError("Invalid or missing property 'x5c'");
+			throw new Error("Invalid or missing property 'x5c'");
 		}
 
 		const statement: FIDOU2FAttestationStatement = {
@@ -234,18 +221,18 @@ export class AttestationStatement {
 
 	public appleAnonymous(): AppleAnonymousAttestationStatement {
 		if (this.format !== AttestationStatementFormat.AppleAnonymous) {
-			throw new AttestationStatementParseError("Invalid format");
+			throw new Error("Invalid format");
 		}
 		if (!("x5c" in this.decoded) || !Array.isArray(this.decoded.x5c)) {
-			throw new AttestationStatementParseError("Invalid or missing property 'x5c'");
+			throw new Error("Invalid or missing property 'x5c'");
 		}
 		if (this.decoded.x5c.length < 1) {
-			throw new AttestationStatementParseError("Invalid or missing property 'x5c'");
+			throw new Error("Invalid or missing property 'x5c'");
 		}
 		const certificates: Uint8Array[] = [];
 		for (const certificate of this.decoded.x5c) {
 			if (!(certificate instanceof Uint8Array)) {
-				throw new AttestationStatementParseError("Invalid or missing property 'x5c'");
+				throw new Error("Invalid or missing property 'x5c'");
 			}
 			certificates.push(certificate);
 		}
@@ -255,20 +242,14 @@ export class AttestationStatement {
 	}
 }
 
-export class AttestationStatementParseError extends Error {
-	constructor(message: string) {
-		super(`Failed to parse attestation statement: ${message}`);
-	}
-}
-
 export interface PackedAttestationStatement {
-	algorithm: COSEAlgorithm;
+	algorithm: number;
 	signature: Uint8Array;
 	certificates: Uint8Array[] | null;
 }
 
 export interface TPMAttestationStatement {
-	algorithm: COSEAlgorithm;
+	algorithm: number;
 	signature: Uint8Array;
 	certificates: Uint8Array[];
 	attestation: Uint8Array;
@@ -276,7 +257,7 @@ export interface TPMAttestationStatement {
 }
 
 export interface AndroidKeyAttestationStatement {
-	algorithm: COSEAlgorithm;
+	algorithm: number;
 	signature: Uint8Array;
 	certificates: Uint8Array[];
 }

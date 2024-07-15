@@ -9,9 +9,8 @@ See [Android Key Attestation Statement Format](https://www.w3.org/TR/webauthn-2/
 ## Definition
 
 ```ts
-//$ COSEAlgorithm=/reference/main/COSEAlgorithm
 interface AndroidKeyAttestationStatement {
-	algorithm: $$COSEAlgorithm;
+	algorithm: number;
 	signature: Uint8Array;
 	certificates: Uint8Array[];
 }
@@ -19,6 +18,6 @@ interface AndroidKeyAttestationStatement {
 
 ### Properties
 
-- `algorithm`
+- `algorithm`: IANA COSE algorithm ID
 - `signature`
 - `certificates`: A series of ASN.1 DER encoded certificates.

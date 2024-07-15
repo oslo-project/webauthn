@@ -11,9 +11,8 @@ This can only represent keys where both the x and y coordinates are defined.
 ## Definition
 
 ```ts
-//$ COSEEllipticCurve=/reference/main/COSEEllipticCurve
 interface ECDSAPublicKey {
-	curve: $$COSEEllipticCurve;
+	curve: number;
 	x: bigint;
 	y: bigint;
 }
@@ -21,6 +20,6 @@ interface ECDSAPublicKey {
 
 ### Properties
 
-- `curve`
+- `curve`: IANA COSE elliptic curve ID.
 - `x`
 - `y`
