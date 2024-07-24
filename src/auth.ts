@@ -124,7 +124,7 @@ export function parseAuthenticatorData(encoded: Uint8Array): AuthenticatorData {
 		userPresent: (encoded[32] & 0x01) === 1,
 		userVerified: ((encoded[32] >> 2) & 0x01) === 1
 	};
-	const signatureCounter = bigEndian.uint32(encoded.slice(33, 37));
+	const signatureCounter = bigEndian.uint32(encoded, 33);
 	const includesAttestedCredentialData = ((encoded[32] >> 6) & 0x01) === 1;
 	let credential: WebAuthnCredential | null = null;
 	if (includesAttestedCredentialData) {
@@ -132,7 +132,7 @@ export function parseAuthenticatorData(encoded: Uint8Array): AuthenticatorData {
 			throw new AuthenticatorDataParseError("Invalid credential data");
 		}
 		const aaguid = encoded.slice(37, 53);
-		const credentialIdLength = bigEndian.uint16(encoded.slice(53, 55));
+		const credentialIdLength = bigEndian.uint16(encoded, 53);
 		if (encoded.byteLength < 37 + 18 + credentialIdLength) {
 			throw new AuthenticatorDataParseError("Insufficient bytes");
 		}
@@ -163,7 +163,7 @@ export class AuthenticatorData {
 	public userPresent: boolean;
 	public userVerified: boolean;
 	public signatureCounter: number;
-	public credential: WebAuthnCredential | null;
+	public _credential: WebAuthnCredential | null;
 	public extensions: null;
 
 	constructor(
@@ -177,7 +177,7 @@ export class AuthenticatorData {
 		this.userPresent = flags.userPresent;
 		this.userVerified = flags.userVerified;
 		this.signatureCounter = signatureCounter;
-		this.credential = credential;
+		this._credential = credential;
 		this.extensions = extensions;
 	}
 
