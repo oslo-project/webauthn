@@ -57,7 +57,7 @@ import {
 	parseClientDataJSON,
 	createAssertionSignatureMessage
 } from "@oslojs/webauthn";
-import { decodeSEC1PublicKey, decodeX509ECDSASignature, p256, verifyECDSASignature } from "@oslojs/crypto/ecdsa";
+import { decodeSEC1PublicKey, decodePKIXECDSASignature, p256, verifyECDSASignature } from "@oslojs/crypto/ecdsa";
 import { sha256 } from "@oslojs/crypto/sha2";
 
 // Bytes sent from the client
@@ -94,7 +94,7 @@ if (clientData.crossOrigin !== null && clientData.crossOrigin) {
 // Get public key and user ID from credential ID
 const credential = getCredential(credentialId);
 // Decode DER-encoded signature
-const ecdsaSignature = decodeX509ECDSASignature(signature);
+const ecdsaSignature = decodePKIXECDSASignature(signature);
 const ecdsaPublicKey = decodeSEC1PublicKey(p256, credential.encodedPublicKey);
 const hash = sha256(createAssertionSignatureMessage(authenticatorData, clientDataJSON));
 const valid = verifyECDSASignature(ecdsaPublicKey, hash, ecdsaSignature);
