@@ -96,7 +96,7 @@ const credential = getCredential(credentialId);
 // Decode DER-encoded signature
 const ecdsaSignature = decodePKIXECDSASignature(signature);
 const ecdsaPublicKey = decodeSEC1PublicKey(p256, credential.encodedPublicKey);
-const hash = sha256(createAssertionSignatureMessage(authenticatorData, clientDataJSON));
+const hash = sha256(createAssertionSignatureMessage(encodedAuthenticatorData, clientDataJSON));
 const valid = verifyECDSASignature(ecdsaPublicKey, hash, ecdsaSignature);
 if (valid) {
 	const userId = credential.userId;
