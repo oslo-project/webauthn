@@ -1,7 +1,7 @@
 {
 	"name": "@oslojs/webauthn",
 	"type": "module",
-	"version": "0.6.2",
+	"version": "0.6.3",
 	"description": "Parse and verify Web Authentication data",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",

@@ -163,7 +163,7 @@ export class AuthenticatorData {
 	public userPresent: boolean;
 	public userVerified: boolean;
 	public signatureCounter: number;
-	public _credential: WebAuthnCredential | null;
+	public credential: WebAuthnCredential | null;
 	public extensions: null;
 
 	constructor(
@@ -177,7 +177,7 @@ export class AuthenticatorData {
 		this.userPresent = flags.userPresent;
 		this.userVerified = flags.userVerified;
 		this.signatureCounter = signatureCounter;
-		this._credential = credential;
+		this.credential = credential;
 		this.extensions = extensions;
 	}
 

@@ -1,5 +1,9 @@
 # @oslojs/webauthn
 
+## 0.6.3
+
+- Fix: Make `AuthenticatorData.credential` public
+
 ## 0.6.2
 
 - Update dependencies.
