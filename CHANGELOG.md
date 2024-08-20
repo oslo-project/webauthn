@@ -1,5 +1,9 @@
 # @oslojs/webauthn
 
+## 0.6.4
+
+- Fix: Export `AttestationStatement` type
+
 ## 0.6.3
 
 - Fix: Make `AuthenticatorData.credential` public
