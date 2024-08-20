@@ -20,6 +20,7 @@ export { createAssertionSignatureMessage } from "./signature.js";
 
 export type {
 	AttestationObject,
+	AttestationStatement,
 	AndroidKeyAttestationStatement,
 	AndroidSafetyNetAttestationStatement,
 	AppleAnonymousAttestationStatement,
