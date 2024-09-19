@@ -1,5 +1,5 @@
 import { bigEndian, compareBytes } from "@oslojs/binary";
-import { base64url } from "@oslojs/encoding";
+import { decodeBase64urlIgnorePadding } from "@oslojs/encoding";
 import { COSEPublicKey, decodeCOSEPublicKey } from "./cose.js";
 import { sha256 } from "@oslojs/crypto/sha2";
 
@@ -29,7 +29,7 @@ export function parseClientDataJSON(encoded: Uint8Array): ClientData {
 	}
 	let challenge: Uint8Array;
 	try {
-		challenge = base64url.decodeIgnorePadding(parsed.challenge);
+		challenge = decodeBase64urlIgnorePadding(parsed.challenge);
 	} catch {
 		throw new ClientDataParseError("Missing or invalid property 'challenge'");
 	}
@@ -58,7 +58,7 @@ export function parseClientDataJSON(encoded: Uint8Array): ClientData {
 
 		let tokenBindingId: Uint8Array;
 		try {
-			tokenBindingId = base64url.decodeIgnorePadding(parsed.tokenBinding.id);
+			tokenBindingId = decodeBase64urlIgnorePadding(parsed.tokenBinding.id);
 		} catch {
 			throw new ClientDataParseError("Missing or invalid property 'tokenBinding.id'");
 		}

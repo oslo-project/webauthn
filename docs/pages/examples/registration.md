@@ -11,7 +11,7 @@ Use `navigator.credentials.create()` to create a new credential on the device. F
 Send the attestation object and client data JSON to the server.
 
 ```ts
-import { base64 } from "@oslojs/encoding";
+import { encodeBase64 } from "@oslojs/encoding";
 
 // Random bytes generated in the server.
 // This must be generated on each attempt.
@@ -57,8 +57,8 @@ const response = await fetch("/api/register", {
 	method: "POST",
 	// this example uses JSON but you can use something like CBOR to get something more compact
 	body: JSON.stringify({
-		attestationObject: base64.encode(new Uint8Array(credential.response.attestationObject)),
-		clientDataJSON: base64.encode(new Uint8Array(credential.response.clientDataJSON))
+		attestationObject: encodeBase64(new Uint8Array(credential.response.attestationObject)),
+		clientDataJSON: encodeBase64(new Uint8Array(credential.response.clientDataJSON))
 	})
 });
 ```

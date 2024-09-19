@@ -1,5 +1,9 @@
 # @oslojs/webauthn
 
+## 1.0.0
+
+- No changes.
+
 ## 0.6.4
 
 - Fix: Export `AttestationStatement` type
