@@ -11,7 +11,7 @@ This can only represent keys where both the x and y coordinates are defined.
 ## Definition
 
 ```ts
-interface ECDSAPublicKey {
+interface COSEEC2PublicKey {
 	curve: number;
 	x: bigint;
 	y: bigint;

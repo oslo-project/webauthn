@@ -9,7 +9,7 @@ Represents a COSE octet key pair (OKP) public key for EdDSA as defined in [RFC 9
 ## Definition
 
 ```ts
-interface ECDSAPublicKey {
+interface COSEOKPPublicKey {
 	curve: number;
 	x: Uint8Array;
 }
