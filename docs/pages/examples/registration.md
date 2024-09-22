@@ -4,23 +4,12 @@ title: "Registration"
 
 # Registration
 
-First generate a random challenge on the server, anywhere from 16 to 32 bytes. This should be stored on the server and be single use. We recommend tying the challenge to the current session or providing the client with an "attempt ID" that it can send to the server.
+See the [WebAuthn guide](https://thecopenhagenbook.com/webauthn) in the Copenhagen Book for details on WebAuthn.
 
-Use `navigator.credentials.create()` to create a new credential on the device. For using passkeys as the main authentication method, `attestation` should be `none` and `userVerification` should be `required`. `userVerification` can be `preferred` if you're using passkeys as a second-factor on top of passwords. Most, if not all devices, support ES256 (ECDSA with P-256 and SHA-256), identified with `-7`.
-
-Send the attestation object and client data JSON to the server.
+Use `navigator.credentials.create()` to create a new credential on the device and send the returned attestation object and client data JSON to the server.
 
 ```ts
 import { encodeBase64 } from "@oslojs/encoding";
-
-// Random bytes generated in the server.
-// This must be generated on each attempt.
-const challenge = new Uint8Array(20);
-
-// random ID for the authenticator
-// this does not need to match the actual user ID
-const userId = new Uint8Array(20);
-crypto.getRandomValues(userId);
 
 const credential = await navigator.credentials.create({
 	publicKey: {
@@ -28,7 +17,7 @@ const credential = await navigator.credentials.create({
 		user: {
 			displayName: "User",
 			id: userId,
-			name: "user@example.com" // user identifier like username or email
+			name: "user@example.com"
 		},
 		rp: {
 			name: "My site"
@@ -39,7 +28,7 @@ const credential = await navigator.credentials.create({
 				type: "public-key"
 			}
 		],
-		attestation: "none", // none for passkeys
+		attestation: "none",
 		authenticatorSelection: {
 			userVerification: "required"
 		}
@@ -55,7 +44,6 @@ if (!(credential.response instanceof AuthenticatorAttestationResponse)) {
 
 const response = await fetch("/api/register", {
 	method: "POST",
-	// this example uses JSON but you can use something like CBOR to get something more compact
 	body: JSON.stringify({
 		attestationObject: encodeBase64(new Uint8Array(credential.response.attestationObject)),
 		clientDataJSON: encodeBase64(new Uint8Array(credential.response.clientDataJSON))

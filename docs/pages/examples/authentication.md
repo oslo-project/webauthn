@@ -4,21 +4,12 @@ title: "Authentication"
 
 # Authentication
 
-Generate a random challenge on the server and call `navigator.credentials.get()` to authenticate the user with a credential on their device.
+See the [WebAuthn guide](https://thecopenhagenbook.com/webauthn) in the Copenhagen Book for details on WebAuthn.
 
-Send the credential ID, signature, authenticator data, and client data JSON to the server.
+Call `navigator.credentials.get()` to authenticate the user with a credential on their device and send the returned credential ID, signature, authenticator data, and client data JSON to the server.
 
 ```ts
 import { encodeBase64 } from "@oslojs/encoding";
-
-// Random bytes generated in the server.
-// This must be generated on each attempt.
-const challenge = new Uint8Array(20);
-
-// random ID for the authenticator
-// this does not need to match the actual user ID
-const userId = new Uint8Array(20);
-crypto.getRandomValues(userId);
 
 const credential = await await navigator.credentials.get({
 	publicKey: {
