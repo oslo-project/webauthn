@@ -31,7 +31,7 @@ if (authenticatorData.credential.publicKey.algorithm() !== coseAlgorithmES256) {
 const publicKey = authenticatorData.credential.publicKey.ec2();
 ```
 
-This package currently does not support attestation extensions and also does not provide APIs for verifying attestation statements (e.g FIDO-U2F, TPM).
+This package currently does not support attestation extensions and also does not provide APIs for verifying attestation statements (e.g. FIDO-U2F, TPM).
 
 ## Installation
 
